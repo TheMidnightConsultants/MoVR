@@ -5,5 +5,5 @@ from django.shortcuts import render
 def login(request):
 	return render(request, 'editor/login.html')
 
-def roomlist(request):
-	return render(request, 'editor/roomlist.html')
+def app(request):
+	return render(request, 'editor/app.html')
