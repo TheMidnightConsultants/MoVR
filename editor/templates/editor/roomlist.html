@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title>Semantic UI Test</title>
+    <link rel="stylesheet" type="text/css" href="./example_files/button.css">
+    <link rel="stylesheet" type="text/css" href="./example_files/segment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/roomlist.css">
+
+    <!--
+    <script>
+        document.getElementById("hideButton").addEventListener('click', function( event ){
+            main.style.display = 'none';
+        }, false);
+    </script>
+    -->
+</head>
+
+<body>
+    <!--
+    <button id="hideButton" class="fluid ui grey button" tabindex="0">Hide</button>
+    -->
+    <div class="main">
+
+        <div id="header">
+            Your Rooms
+        </div>
+
+        <div id="roomslist" class="list container">
+            <div class="ui segment">
+                <ul>
+                    <li>Alan's Bedroom</li>
+                    <li>James's Bedroom</li>
+                    <li>Living Room</li>
+                    <li>Sex Dungeon</li>
+                    <li>Sex Dungeon 2</li>
+            </div>
+        </div>
+
+        <div id="rightbar">
+            <button class="fluid ui animated green icon button" tabindex="0">
+                <div class="visible content"><i class="fa fa-plus"></i></div>
+                <div class="hidden content">Add Room</div>
+            </button>
+            <button class="fluid ui animated red icon button" tabindex="0">
+                <div class="visible content"><i class="fa fa-remove"></i></div>
+                <div class="hidden content">Delete Room</div>
+            </button> 
+            <button class="fluid ui animated blue icon button" tabindex="0">
+                <div class="visible content"><i class="fa fa-copy"></i></div>
+                <div class="hidden content">Duplicate Room</div>
+            </button>
+            <button class="fluid ui grey button" tabindex="0">Log out</button>
+        </div>
+
+
+    </div>
+</body>
+</html>
