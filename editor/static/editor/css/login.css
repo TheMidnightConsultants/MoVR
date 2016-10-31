@@ -35,3 +35,7 @@ form {
     transform: translateY(-50%);
     font-family: sans-serif;
 }
+
+.links {
+    font-size: 0.5em;
+}
