@@ -7,3 +7,6 @@ def login(request):
 
 def app(request):
 	return render(request, 'editor/app.html')
+	
+def mobile(request):
+	return render(request, 'editor/mobile.html')

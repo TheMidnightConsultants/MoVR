@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
 	url(r'^login/', views.login),
 	url(r'^app/', views.app),
+	url(r'^mobile/', views.mobile),
 ]
