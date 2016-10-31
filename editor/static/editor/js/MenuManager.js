@@ -4,8 +4,7 @@
 	Will eventually be responsible for populating those menus with furniture/rooms and responding
 	to user input on menu contents: will require helper classes to fetch/format info.
 */
-
-var MenuManager = function () {
+function MenuManager( scene ) {
 	console.log('instantiating a MenuManager');
 		
 	//hard-coded blocker ID
@@ -26,15 +25,13 @@ var MenuManager = function () {
 
 			if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
 
-				controlsEnabled = true;
-				controls.enabled = true;
+				scene.EnableControls();
 
 				blocker.style.display = 'none';
 
 			} else {
 				
-				controlsEnabled = false;
-				controls.enabled = false;
+				scene.DisableControls();
 
 				blocker.style.display = 'block';
 			}
@@ -104,7 +101,7 @@ MenuManager.prototype.addMenu = function ( menuName ){
 		this.currentMenu = this.menus[menuName];
 		this.prevMenu = this.menus[menuName];
 	}
-}
+};
 
 /* Adds a listener to navigate to the given menu, when given button/element is clicked
 Args: 	menuName - id of the HTML menu element to navigate to
@@ -118,7 +115,7 @@ MenuManager.prototype.registerNavBtn = function ( menuName, buttonName ){
 			menumgr.switchMenu(menuName);
 		}, false);
 	}
-}
+};
 
 /* Navigates to the given menu
 Args:	newMenu -id of the HTML menu element to navigate to
@@ -136,4 +133,4 @@ MenuManager.prototype.hideAll = function () {
 	Object.keys(this.menus).forEach(function(key){
 		this.menus[key].style.display = 'none';
 	}, this);
-}
+};

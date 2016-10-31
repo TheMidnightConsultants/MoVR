@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Semantic UI Test</title>
+    <title>MoVR</title>
     <link rel="stylesheet" type="text/css" href="/static/editor/css/semantic/button.css">
     <link rel="stylesheet" type="text/css" href="/static/editor/css/semantic/segment.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
@@ -76,10 +76,13 @@
 	
 	<script src="/static/editor/js/three.js"></script>
 	<script src="/static/editor/js/PointerLockControls.js"></script>
+	<script src="/static/editor/js/Scene.js"></script>
+	<script src="/static/editor/js/DemoScene.js"></script>
 	<script src="/static/editor/js/MenuManager.js"></script>
 	
 	<script>
-		var menuManager = new MenuManager();
+		var scene = new DesktopScene();
+		var menuManager = new MenuManager(scene);
 		menuManager.addMenu('mainMenu');
 		menuManager.addMenu('furnitureMenu');
 		menuManager.addMenu('helpMenu');
@@ -93,6 +96,5 @@
 		menuManager.hideAll();
 		menuManager.switchMenu('mainMenu');
 	</script>
-	<script src="/static/editor/js/DemoScene.js"></script>
 </body>
 </html>

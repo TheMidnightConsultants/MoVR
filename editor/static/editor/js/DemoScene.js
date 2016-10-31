@@ -1,236 +1,151 @@
-var camera, scene, renderer;
-var geometry, material, mesh;
-var controls;
-var cursorLocked;
+DesktopScene.prototype = Scene.prototype;
 
-var objects = [];
+function DesktopScene(){
+	Scene.apply(this, Array.prototype.slice.call(arguments));
+	this.cursorLocked;
 
-var raycaster;
+	this.controlsEnabled = false;
+	this.moveForward = false;
+	this.moveBackward = false;
+	this.moveLeft = false;
+	this.moveRight = false;
+	this.canJump = false;
 
-init();
-animate();
+	this.prevTime = performance.now();
+	this.velocity = new THREE.Vector3();
 
-var controlsEnabled = false;
+	this.controls = new THREE.PointerLockControls( this.camera );
+	this.scene.add( this.controls.getObject() );
 
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-var canJump = false;
+	document.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
+	document.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
+	
+	this.animate();
+};
 
-var prevTime = performance.now();
-var velocity = new THREE.Vector3();
+DesktopScene.prototype.onKeyDown = function ( event ) {
 
-function init() {
+	switch ( event.keyCode ) {
 
-	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+		case 38: // up
+		case 87: // w
+			this.moveForward = true;
+			break;
 
-	scene = new THREE.Scene();
-	scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+		case 37: // left
+		case 65: // a
+			this.moveLeft = true; 
+			break;
 
-	var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-	light.position.set( 0.5, 1, 0.75 );
-	scene.add( light );
+		case 40: // down
+		case 83: // s
+			this.moveBackward = true;
+			break;
 
-	controls = new THREE.PointerLockControls( camera );
-	scene.add( controls.getObject() );
+		case 39: // right
+		case 68: // d
+			this.moveRight = true;
+			break;
 
-	var onKeyDown = function ( event ) {
+		case 32: // space
+			if ( this.canJump === true ) this.velocity.y += 350;
+			this.canJump = false;
+			break;
 
-		switch ( event.keyCode ) {
+	}
+	console.log(this);
 
-			case 38: // up
-			case 87: // w
-				moveForward = true;
-				break;
+};
 
-			case 37: // left
-			case 65: // a
-				moveLeft = true; break;
+DesktopScene.prototype.onKeyUp = function ( event ) {
 
-			case 40: // down
-			case 83: // s
-				moveBackward = true;
-				break;
+	switch( event.keyCode ) {
 
-			case 39: // right
-			case 68: // d
-				moveRight = true;
-				break;
+		case 38: // up
+		case 87: // w
+			this.moveForward = false;
+			break;
 
-			case 32: // space
-				if ( canJump === true ) velocity.y += 350;
-				canJump = false;
-				break;
+		case 37: // left
+		case 65: // a
+			this.moveLeft = false;
+			break;
 
-		}
+		case 40: // down
+		case 83: // s
+			this.moveBackward = false;
+			break;
 
-	};
-
-	var onKeyUp = function ( event ) {
-
-		switch( event.keyCode ) {
-
-			case 38: // up
-			case 87: // w
-				moveForward = false;
-				break;
-
-			case 37: // left
-			case 65: // a
-				moveLeft = false;
-				break;
-
-			case 40: // down
-			case 83: // s
-				moveBackward = false;
-				break;
-
-			case 39: // right
-			case 68: // d
-				moveRight = false;
-				break;
-				
-
-		}
-
-	};
-
-	document.addEventListener( 'keydown', onKeyDown, false );
-	document.addEventListener( 'keyup', onKeyUp, false );
-
-	raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
-
-	// floor
-
-	geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
-	geometry.rotateX( - Math.PI / 2 );
-
-	for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-
-		var vertex = geometry.vertices[ i ];
-		vertex.x += Math.random() * 20 - 10;
-		vertex.y += Math.random() * 2;
-		vertex.z += Math.random() * 20 - 10;
+		case 39: // right
+		case 68: // d
+			this.moveRight = false;
+			break;
+			
 
 	}
 
-	for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+};
 
-		var face = geometry.faces[ i ];
-		face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-		face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-		face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+DesktopScene.prototype.animate = function() {
+	requestAnimationFrame( this.animate.bind(this) );
 
-	}
+	if ( this.controlsEnabled ) {
+		this.raycaster.ray.origin.copy( this.controls.getObject().position );
+		this.raycaster.ray.origin.y -= 10;
 
-	material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
-
-	mesh = new THREE.Mesh( geometry, material );
-	scene.add( mesh );
-
-	// objects
-
-	geometry = new THREE.BoxGeometry( 20, 20, 20 );
-
-	for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-		var face = geometry.faces[ i ];
-		face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-		face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-		face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-	}
-
-	for ( var i = 0; i < 500; i ++ ) {
-
-		material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
-
-		var mesh = new THREE.Mesh( geometry, material );
-		mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-		mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-		mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-		scene.add( mesh );
-
-		material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-		objects.push( mesh );
-
-	}
-
-	//
-
-	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor( 0xffffff );
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild( renderer.domElement );
-
-	//
-
-	window.addEventListener( 'resize', onWindowResize, false );
-
-}
-
-function onWindowResize() {
-	//update 3D scene
-	camera.aspect = window.innerWidth / window.innerHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize( window.innerWidth, window.innerHeight );
-}
-
-function animate() {
-
-	requestAnimationFrame( animate );
-
-	if ( controlsEnabled ) {
-		raycaster.ray.origin.copy( controls.getObject().position );
-		raycaster.ray.origin.y -= 10;
-
-		var intersections = raycaster.intersectObjects( objects );
+		var intersections = this.raycaster.intersectObjects( this.objects );
 
 		var isOnObject = intersections.length > 0;
 
 		var time = performance.now();
-		var delta = ( time - prevTime ) / 1000;
+		var delta = ( time - this.prevTime ) / 1000;
+		var velocity = this.velocity;
 
 		velocity.x -= velocity.x * 10.0 * delta;
 		velocity.z -= velocity.z * 10.0 * delta;
 
 		velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-		if ( moveForward ) velocity.z -= 400.0 * delta;
-		if ( moveBackward ) velocity.z += 400.0 * delta;
+		if ( this.moveForward ) velocity.z -= 400.0 * delta;
+		if ( this.moveBackward ) velocity.z += 400.0 * delta;
 
-		if ( moveLeft ) velocity.x -= 400.0 * delta;
-		if ( moveRight ) velocity.x += 400.0 * delta;
+		if ( this.moveLeft ) velocity.x -= 400.0 * delta;
+		if ( this.moveRight ) velocity.x += 400.0 * delta;
 
 		if ( isOnObject === true ) {
 			velocity.y = Math.max( 0, velocity.y );
 
-			canJump = true;
+			this.canJump = true;
 		}
 
-		controls.getObject().translateX( velocity.x * delta );
-		controls.getObject().translateY( velocity.y * delta );
-		controls.getObject().translateZ( velocity.z * delta );
+		this.controls.getObject().translateX( velocity.x * delta );
+		this.controls.getObject().translateY( velocity.y * delta );
+		this.controls.getObject().translateZ( velocity.z * delta );
 
-		if ( controls.getObject().position.y < 10 ) {
+		if ( this.controls.getObject().position.y < 10 ) {
 
 			velocity.y = 0;
-			controls.getObject().position.y = 10;
+			this.controls.getObject().position.y = 10;
 
-			canJump = true;
+			this.canJump = true;
 
 		}
 
-		prevTime = time;
+		this.prevTime = time;
 
 	} else {
-		prevTime = performance.now();
+		this.prevTime = performance.now();
 	}
 
-	renderer.render( scene, camera );
-	
-}
+	this.renderer.render( this.scene, this.camera );
+};
+
+DesktopScene.prototype.EnableControls = function(){
+	this.controls.enabled = true;
+	this.controlsEnabled = true;
+};
+
+DesktopScene.prototype.DisableControls = function(){
+	this.controls.enabled = false;
+	this.controlsEnabled = false;
+};
