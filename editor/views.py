@@ -5,6 +5,9 @@ from django.shortcuts import render
 def login(request):
 	return render(request, 'editor/login.html')
 
+def register(request):
+	return render(request, 'editor/register.html')
+
 def app(request):
 	return render(request, 'editor/app.html')
 	
