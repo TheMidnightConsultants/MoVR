@@ -1,8 +1,5 @@
 /* MenuManager - owns the menu overlay (blocker) and all the menus which the user might be shown.
 	Keeps track of the previously visited menu to enable "go back" functionality.
-	
-	Will eventually be responsible for populating those menus with furniture/rooms and responding
-	to user input on menu contents: will require helper classes to fetch/format info.
 */
 function MenuManager( scene ) {
 	console.log('instantiating a MenuManager');

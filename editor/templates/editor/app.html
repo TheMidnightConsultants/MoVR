@@ -28,12 +28,7 @@
 			
 			<div id="roomslist" class="list container">
 				<div class="ui segment">
-					<ul>
-						<li>Alan's Bedroom</li>
-						<li>James's Bedroom</li>
-						<li>Living Room</li>
-						<li>Sex Dungeon</li>
-						<li>Sex Dungeon 2</li>
+					<ul id="roomslistUL">
 				</div>
 			</div>
 
@@ -76,20 +71,26 @@
 	
 	<script src="/static/editor/js/three.js"></script>
 	<script src="/static/editor/js/PointerLockControls.js"></script>
+	<script src="/static/editor/js/Util.js"></script>
 	<script src="/static/editor/js/Scene.js"></script>
 	<script src="/static/editor/js/DemoScene.js"></script>
 	<script src="/static/editor/js/MenuManager.js"></script>
+	<script src="/static/editor/js/RoomManager.js"></script>
 	
 	<script>
 		var scene = new DesktopScene();
 		var menuManager = new MenuManager(scene);
+		var roomManager = new RoomManager('roomslistUL')
+		roomManager.update(100, 'authorized'); //JMIL: I've been using user ID 100 for testing; 
+		// it should be replaced with the actual userId once we have a way to get it
+		
 		menuManager.addMenu('mainMenu');
 		menuManager.addMenu('furnitureMenu');
 		menuManager.addMenu('helpMenu');
 		menuManager.registerNavBtn('mainMenu', 'mainMenuButton');
 		menuManager.registerNavBtn('furnitureMenu', 'furnitureButton');
 		menuManager.registerNavBtn('helpMenu', 'helpButton');
-		//these next 2 are temporary, until we get the actual functionality going
+		//JMIL: these next 2 are temporary, until we get the actual functionality going
 		menuManager.registerNavBtn('mainMenu', 'furnitureMenu');
 		menuManager.registerNavBtn('mainMenu', 'helpMenu');
 		
