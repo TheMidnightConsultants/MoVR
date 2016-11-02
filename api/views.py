@@ -38,3 +38,19 @@ def addRoom(request):
 	room = Room(owner=user_id, name=room_name)
 	room.save()
 	return JsonResponse({'status':'ok'})
+	
+def deleteRoom(request):
+	json_data = json.loads(request.body.decode('utf-8'))
+	user_id = int(json_data['user_id']);
+	auth_token = json_data['auth_token']
+	room_id = json_data['room_id']
+	if not __authTokenValid(user_id, auth_token):
+		return JsonResponse({'status':'failed', 'msg':'invalid token'})
+	rooms = Room.objects.filter(pk=room_id)
+	roomslist = list(rooms)
+	if (len(roomslist) != 1):
+		return JsonResponse({'status':'failed', 'msg':'room does not exist'})
+	if (roomslist[0].owner != user_id):
+		return JsonResponse({'status':'failed', 'msg':'user does not own that room'})
+	rooms.delete()
+	return JsonResponse({'status':'ok'})
