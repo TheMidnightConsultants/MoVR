@@ -7,7 +7,7 @@ function MenuManager( scene ) {
 	//hard-coded blocker ID
 	this.blocker = document.getElementById( 'blocker' );
 	//only need the PlayButton temporarily: will get replaced with something else later
-	this.playButton = document.getElementById( 'playButton' );
+	this.playButton = document.getElementById( 'playBtn' );
 	
 	this.currentMenu = 'none';
 	this.prevMenu = 'none';
@@ -48,7 +48,7 @@ function MenuManager( scene ) {
 		document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
 		document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
 
-		document.getElementById("playButton").addEventListener( 'click', function ( event ) {
+		this.playButton.addEventListener( 'click', function ( event ) {
 			
 			// Ask the browser to lock the pointer
 			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;

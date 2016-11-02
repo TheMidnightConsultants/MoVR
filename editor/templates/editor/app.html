@@ -33,27 +33,31 @@
 			</div>
 
 			<div id="rightbar">
-				<button class="fluid ui animated green icon button" tabindex="0">
+				<button id="addroomBtn" class="fluid ui animated green icon button" tabindex="0">
 					<div class="visible content"><i class="fa fa-plus"></i></div>
 					<div class="hidden content">Add Room</div>
 				</button>
-				<button class="fluid ui animated red icon button" tabindex="0">
+				<button id="deleteroomBtn" class="fluid ui animated red icon button" tabindex="0">
 					<div class="visible content"><i class="fa fa-remove"></i></div>
 					<div class="hidden content">Delete Room</div>
 				</button> 
-				<button class="fluid ui animated blue icon button" tabindex="0">
+				<button id="copyroomBtn" class="fluid ui animated blue icon button" tabindex="0">
 					<div class="visible content"><i class="fa fa-copy"></i></div>
 					<div class="hidden content">Duplicate Room</div>
 				</button>
-				<button class="fluid ui grey button" tabindex="0">Log out</button>
+				<button id="logoutBtn" class="fluid ui grey button" tabindex="0">Log out</button>
 				
-					<button id="playButton" type="button">Click to start the app</button>
+				<div id="debugButtons">
+					<button id="playBtn" type="button">Click to start the app</button>
 					<br/>
-					<button id="helpButton" type="button">Click to see the help screen</button>
+					<button id="helpBtn" type="button">Click to see the help screen</button>
 					<br/>
-					<button id="furnitureButton" type="button">View the furniture menu</button> 
+					<button id="furnitureBtn" type="button">View the furniture menu</button> 
 					<br/>
-					<button id="mainMenuButton" type="button">View the main menu</button>
+					<button id="mainMenuBtn" type="button">View the main menu</button>
+					<br/>
+					<button id="changeuserBtn" type="button">Change users</button>
+				</div>
 			</div>
 		</div>
 		
@@ -69,6 +73,8 @@
 		</div>
     </div>
 	
+	<form action="" method="post">{% csrf_token %}</form>
+	
 	<script src="/static/editor/js/three.js"></script>
 	<script src="/static/editor/js/PointerLockControls.js"></script>
 	<script src="/static/editor/js/Util.js"></script>
@@ -80,16 +86,24 @@
 	<script>
 		var scene = new DesktopScene();
 		var menuManager = new MenuManager(scene);
-		var roomManager = new RoomManager('roomslistUL')
-		roomManager.update(100, 'authorized'); //JMIL: I've been using user ID 100 for testing; 
+		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', 100, 'authorized');
+		roomManager.update(); //JMIL: I've been using user ID 100 for testing; 
 		// it should be replaced with the actual userId once we have a way to get it
+		document.getElementById('changeuserBtn').addEventListener('click', function(event){
+			if (roomManager.userId == 100){
+				roomManager.userId = 102;
+			} else {
+				roomManager.userId = 100;
+			}
+			roomManager.update();
+		}, false);
 		
 		menuManager.addMenu('mainMenu');
 		menuManager.addMenu('furnitureMenu');
 		menuManager.addMenu('helpMenu');
-		menuManager.registerNavBtn('mainMenu', 'mainMenuButton');
-		menuManager.registerNavBtn('furnitureMenu', 'furnitureButton');
-		menuManager.registerNavBtn('helpMenu', 'helpButton');
+		menuManager.registerNavBtn('mainMenu', 'mainMenuBtn');
+		menuManager.registerNavBtn('furnitureMenu', 'furnitureBtn');
+		menuManager.registerNavBtn('helpMenu', 'helpBtn');
 		//JMIL: these next 2 are temporary, until we get the actual functionality going
 		menuManager.registerNavBtn('mainMenu', 'furnitureMenu');
 		menuManager.registerNavBtn('mainMenu', 'helpMenu');

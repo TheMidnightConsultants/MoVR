@@ -53,7 +53,6 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 			break;
 
 	}
-	console.log(this);
 
 };
 
