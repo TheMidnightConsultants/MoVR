@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -13,3 +15,8 @@ def app(request):
 	
 def mobile(request):
 	return render(request, 'editor/mobile.html')
+
+def createUser(request):
+	user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
+	user.save()
+	return HttpResponseRedirect('/login')
