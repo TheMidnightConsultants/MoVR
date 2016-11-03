@@ -51,6 +51,9 @@
 				</button>
 				{% if user.username %}
 				<a class="blanklink" href="/logoutAttempt/"><button id="logoutBtn" class="fluid ui grey button" tabindex="0">Log out</button></a>
+				{% else %}
+				<a class="blanklink" href="/login/"><button id="logoutBtn" class="fluid ui grey button" tabindex="0">Login</button></a>
+				<a class="blanklink" href="/register/"><button id="logoutBtn" class="fluid ui grey button" tabindex="0">Register</button></a>
 				{% endif %}
 
 				<div id="debugButtons">
