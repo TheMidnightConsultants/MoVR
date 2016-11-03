@@ -32,6 +32,10 @@
 	height: calc(100% - 23px);
 }
 
+.blanklink {
+    text-decoration: none;
+}
+
 ul {
     list-style-type: none;
     margin: 0;

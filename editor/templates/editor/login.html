@@ -5,7 +5,8 @@
 </head>
 
 <body>
-    <form>
+    <form action="{% url 'editor:loginAttempt' %}" method="post">
+        {% csrf_token %}
         <h1>Login to MoVR</h1><br>
         Username:<br>
         <input type="text" name="username"><br>
@@ -13,8 +14,8 @@
         <input type="password" name="password"><br>
         <input type="submit" value="Log in">
         <div class="links">
-            Register <br>
-            Forgot your password?
+            Don't have an account?  <a href="/register/">Register here.</a><br>
+            Forgot your password?  For the moment you're out of luck.
         </div>
     </form>
 </body>

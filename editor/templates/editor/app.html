@@ -21,7 +21,11 @@
     -->
     <div id="blocker">
 		<div id="header">
-			Your Rooms
+			{% if not user.username %}
+			You are not logged in.
+			{% else %}
+			{{ user.username }}'s rooms
+			{% endif %}
 		</div>
 	
 		<div id="mainMenu" class="menu">
@@ -45,8 +49,10 @@
 					<div class="visible content"><i class="fa fa-copy"></i></div>
 					<div class="hidden content">Duplicate Room</div>
 				</button>
-				<button id="logoutBtn" class="fluid ui grey button" tabindex="0">Log out</button>
-				
+				{% if user.username %}
+				<a class="blanklink" href="/logoutAttempt/"><button id="logoutBtn" class="fluid ui grey button" tabindex="0">Log out</button></a>
+				{% endif %}
+
 				<div id="debugButtons">
 					<button id="playBtn" type="button">Click to start the app</button>
 					<br/>
