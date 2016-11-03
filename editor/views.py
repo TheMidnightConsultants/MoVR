@@ -34,6 +34,7 @@ def loginAttempt(request):
 		login(request, user)
 		return HttpResponseRedirect('/app/')
 	else:
+		return render(request, 'editor/login.html', {'error': 'Incorrect login.  Try again.'})
 		return HttpResponseRedirect('/login/')
 
 def logoutAttempt(request):
