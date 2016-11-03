@@ -4,26 +4,35 @@ function Room( width_in, length_in, height_in, wallcolor_in ){
  	this.wall_color = wallcolor_in;
 	this.room_height = height_in;
 
-	this.walls = [];
-	this.furniture = [];
+	/*
+	 * 	    	    		Room.mesh
+	 * 	     				  |
+	 *   		+-------------+--------+
+	 *   		|  			           |
+	 * 	   Wall meshes           Room.furniture 
+	 */
+	this.mesh = new THREE.Group();
+	this.furniture = new THREE.Group();
+	this.mesh.add(this.furniture);
+
 
 	var i, wall_dim, other_dim, offset, other_offset;
 	var geometry, material, mesh;
 
 	// walls
 
-	for ( var i = 0; i < 4; i ++){
+	for ( i = 0; i < 4; i ++){
 
-		wall_dim = room_dimensions[Math.floor(i/2)];
-		other_dim = room_dimensions[ (Math.floor(i/2)+1) % 2 ];
+		wall_dim = this.dimensions[Math.floor(i/2)];
+		other_dim = this.dimensions[ (Math.floor(i/2)+1) % 2 ];
 		offset = Math.floor(wall_dim/2);
 		other_offset = (i%2) * other_dim;
 
-		geometry = new THREE.PlaneGeometry(wall_dim, room_height);
-		material = new THREE.MeshPhongMaterial( { color: wall_color, shading: THREE.FlatShading } );
+		geometry = new THREE.PlaneGeometry(wall_dim, this.room_height);
+		material = new THREE.MeshPhongMaterial( { color: this.wall_color, shading: THREE.FlatShading } );
 		mesh = new THREE.Mesh( geometry, material );
 
-		mesh.position.y = Math.floor(room_height) / 2;
+		mesh.position.y = Math.floor(this.room_height) / 2;
 
 		if (Math.floor(i/2) == 0){
 			mesh.position.x = offset;
@@ -36,49 +45,27 @@ function Room( width_in, length_in, height_in, wallcolor_in ){
 
 		mesh.material.side = THREE.DoubleSide;
 
-		// this.scene.add( mesh );
-		this.walls.push(mesh);
+		this.mesh.add(mesh);
 	}
 
 	// ceiling
 
-	geometry = new THREE.PlaneGeometry(room_dimensions[0],room_dimensions[1]);
-	material = new THREE.MeshPhongMaterial( { color: wall_color, shading: THREE.FlatShading } );
+	geometry = new THREE.PlaneGeometry(this.dimensions[0],this.dimensions[1]);
+	material = new THREE.MeshPhongMaterial( { color: this.wall_color, shading: THREE.FlatShading } );
 	mesh = new THREE.Mesh( geometry, material );
 
 	mesh.material.side = THREE.DoubleSide;
 
-	mesh.position.x = Math.floor(room_dimensions[0]/2);
-	mesh.position.z = Math.floor(room_dimensions[1]/2);
-	mesh.position.y = room_height;
+	mesh.position.x = Math.floor(this.dimensions[0]/2);
+	mesh.position.z = Math.floor(this.dimensions[1]/2);
+	mesh.position.y = this.room_height;
 
 	mesh.rotation.x = Math.PI/2;
 
-	this.scene.add(mesh);
+	this.mesh.add(mesh);
 }
 
-Room.prototype.addFurniture(filename, pos_x, pos_y){
-	
-	// object loader
-	var onProgress = function ( xhr ) {
-		if ( xhr.lengthComputable ) {
-			var percentComplete = xhr.loaded / xhr.total * 100;
-			console.log( Math.round(percentComplete, 2) + '% downloaded' );
-		}
-	};
-	var onError = function ( xhr ) {
-	};
-	
-	var loader = new THREE.OBJLoader();
-	loader.load('/static/editor/models/'+filename,
-		function(object){
-			object.traverse( function(child) {
-			 	if (child instanceof THREE.Mesh){
-			 		child.material = new THREE.MeshPhongMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
-			  	}
-			});
-			object.position.x = pos_x;
-			object.position.z = pos_z;
-			this.furniture.push(object);
-		}.bind(this), onProgress, onError );
+Room.prototype.addFurniture = function(furniture_obj, pos_x, pos_y, pos_z){
+	furniture_obj.setPosition(pos_x, pos_y, pos_z);
+	this.furniture.add(furniture_obj.mesh); // add to furniture mesh
 }

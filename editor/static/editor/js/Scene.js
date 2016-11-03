@@ -44,42 +44,16 @@ function Scene(){
 	mesh = new THREE.Mesh( geometry, material );
 	this.scene.add( mesh );
 
-	// walls
 	
-	var room_dimensions = [120, 120];
- 	var wall_color = 0xAA1111;
-	var room_height = 8*12;
+	this.room = new Room(120, 120, 50, 0xAA2288);
+	this.scene.add(this.room.mesh);
 
-	for ( var i = 0; i < 4; i ++){
-
-		var wall_dim = room_dimensions[Math.floor(i/2)];
-		var other_dim = room_dimensions[ (Math.floor(i/2)+1) % 2 ];
-		var offset = Math.floor(wall_dim/2);
-		var other_offset = (i%2) * other_dim;
-
-		geometry = new THREE.PlaneGeometry(wall_dim, room_height);
-		material = new THREE.MeshPhongMaterial( { color: wall_color, shading: THREE.FlatShading } );
-		mesh = new THREE.Mesh( geometry, material );
-
-		mesh.position.y = Math.floor(room_height) / 2;
-
-		if (Math.floor(i/2) == 0){
-			mesh.position.x = offset;
-			mesh.position.z = other_offset;
-		} else {
-			mesh.position.z = offset;
-			mesh.position.x = other_offset;
-			mesh.rotation.y = Math.PI / 2;
-		}
-
-		mesh.material.side = THREE.DoubleSide;
-
-		this.scene.add( mesh );
-	}
+// 	var testCouch = new Furniture("couch.obj", 0x736283);
+// 	this.room.addFurniture(testCouch, 0, 0, 0);
 
 
 	// object loader
-	
+/*	
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
@@ -91,7 +65,7 @@ function Scene(){
 	};
 	
 	var loader = new THREE.OBJLoader();
-	loader.load('/static/editor/models/deskchair.obj',
+	loader.load('/static/editor/models/couch.obj',
 		function(object){
 			object.traverse( function(child) {
 			 	if (child instanceof THREE.Mesh){
@@ -99,67 +73,12 @@ function Scene(){
 			 		child.material = new THREE.MeshPhongMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
 			  	}
 			});
-			object.position.y = 0;
+			object.position.y = 4;
 			object.scale.set(5,5,5);
 			this.scene.add(object);
 		}.bind(this), onProgress, onError );
+*/
 
-	// var loader = new THREE.ColladaLoader();
-	// loader.load( '/static/editor/models/couch.dae',
-	// 			  function(collada){
-	// 				 this.scene.add(collada.scene);
-	// 			  },
-	// 			  function(xhr){
-	// 					  console.log( (xhr.loaded/xhr.total * 100) + '% loaded' );
-	// 			  }
-	// 		   );
-
-
-
-	// ceiling
-
-	geometry = new THREE.PlaneGeometry(room_dimensions[0],room_dimensions[1]);
-	material = new THREE.MeshPhongMaterial( { color: wall_color, shading: THREE.FlatShading } );
-	mesh = new THREE.Mesh( geometry, material );
-
-	mesh.material.side = THREE.DoubleSide;
-
-	mesh.position.x = Math.floor(room_dimensions[0]/2);
-	mesh.position.z = Math.floor(room_dimensions[1]/2);
-	mesh.position.y = room_height;
-
-	mesh.rotation.x = Math.PI/2;
-
-	this.scene.add(mesh);
-
-	// objects
-
-// 	geometry = new THREE.BoxGeometry( 20, 20, 20 );
-// 
-// 	for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-// 
-// 		var face = geometry.faces[ i ];
-// 		face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-// 		face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-// 		face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-// 
-// 	}
-// 
-// 	for ( var i = 0; i < 500; i ++ ) {
-// 
-// 		material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
-// 
-// 		var mesh = new THREE.Mesh( geometry, material );
-// 		mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-// 		mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-// 		mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-// 		this.scene.add( mesh );
-// 
-// 		material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-// 
-// 		this.objects.push( mesh );
-// 
-// 	}
 
 	//
 
