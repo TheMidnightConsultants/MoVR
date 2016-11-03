@@ -24,7 +24,9 @@ def createUser(request):
 	except IntegrityError:
 		return render(request, 'editor/register.html', {'error': "Username is already taken.  Please choose another."})
 	user.save()
-	return HttpResponseRedirect('/login/')
+	authedUser = authenticate(username=request.POST['username'], password=request.POST['password'])
+	login(request, user)
+	return HttpResponseRedirect('/app/')
 
 def loginAttempt(request):
 	username = request.POST['username']
