@@ -8,6 +8,9 @@
     <form action="{% url 'editor:createUser' %}" method="post">
         {% csrf_token %}
         <h1>Register with MoVR</h1><br>
+        {% if error %}
+        <div style="color:red;font-size:14px;"><b>There was an error during registration:<br>{{ error }}</b></div>
+        {% endif %}
         Username:<br>
         <input type="text" name="username"><br>
         Email:<br>
