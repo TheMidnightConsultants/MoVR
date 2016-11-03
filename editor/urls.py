@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'editor'
 urlpatterns = [
-	url(r'^', views.loginPage, name='root'),
+	url(r'^$', views.loginPage, name='root'),
 	url(r'^login/', views.loginPage, name='loginPage'),
 	url(r'^register/', views.register, name='register'),
 	url(r'^app/', views.app, name='app'),
