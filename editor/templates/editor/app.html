@@ -64,8 +64,6 @@
 					<button id="furnitureBtn" type="button">View the furniture menu</button> 
 					<br/>
 					<button id="mainMenuBtn" type="button">View the main menu</button>
-					<br/>
-					<button id="changeuserBtn" type="button">Change users</button>
 				</div>
 			</div>
 		</div>
@@ -96,19 +94,11 @@
 	<script src="/static/editor/js/Furniture.js"></script>
 	
 	<script>
+		var userId = {{ user.pk }};
 		var scene = new DesktopScene();
 		var menuManager = new MenuManager(scene);
-		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', 100, 'authorized');
-		roomManager.update(); //JMIL: I've been using user ID 100 for testing; 
-		// it should be replaced with the actual userId once we have a way to get it
-		document.getElementById('changeuserBtn').addEventListener('click', function(event){
-			if (roomManager.userId == 100){
-				roomManager.userId = 102;
-			} else {
-				roomManager.userId = 100;
-			}
-			roomManager.update();
-		}, false);
+		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', userId,'authorized');
+		roomManager.update();
 		
 		menuManager.addMenu('mainMenu');
 		menuManager.addMenu('furnitureMenu');
