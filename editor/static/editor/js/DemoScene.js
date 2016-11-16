@@ -167,14 +167,14 @@ DesktopScene.prototype.placeFurniture = function(modelName){
 	if (intersect.length > 0){
 		var p = intersect[0].point;
 		console.log(p);
-		var geometry = new THREE.SphereGeometry(6, 50, 50);
-		var material = new THREE.MeshPhongMaterial({color: 0xff0000});
-		var pointMesh = new THREE.Mesh(geometry, material);
-		pointMesh.position.set(p.x, p.y, p.z);
-		this.scene.add(pointMesh);
-		console.log(pointMesh);
-		// var newFurniture = new Furniture(modelName, 0xf442f1);
-		// this.room.addFurniture(newFurniture, p.x, p.y, p.z);
-		// console.log("Added furniture");
+		// var geometry = new THREE.SphereGeometry(6, 50, 50);
+		// var material = new THREE.MeshPhongMaterial({color: 0xff0000});
+		// var pointMesh = new THREE.Mesh(geometry, material);
+		// pointMesh.position.set(p.x, p.y, p.z);
+		// this.scene.add(pointMesh);
+		// console.log(pointMesh);
+		var newFurniture = new Furniture(modelName, 0xf442f1);
+		this.room.addFurniture(newFurniture, p.x, p.y, p.z);
+		console.log("Added furniture");
 	}
 };
