@@ -49,10 +49,6 @@ function Scene(){
 	this.room = new Room(120, 120, 50, 0xAA2288);
 	this.scene.add(this.room.mesh);
 
-	// var testCouch = new Furniture("couch.obj", 0xf442f1);
-	// this.room.addFurniture(testCouch, 0, 0, 0);
-
-
 	// object loader
 	
 	var onProgress = function ( xhr ) {

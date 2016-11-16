@@ -44,7 +44,8 @@ Furniture.prototype.loadModel = function(filename){
 }
 
 Furniture.prototype.cloneLoadedMesh = function(filename){
-	this.mesh.add(Furniture.loadedModels[filename].clone());
+	var cloneModel = Furniture.loadedModels[filename].clone();
+	this.mesh.add(cloneModel);
 }
 
 Furniture.prototype.setPosition = function(x, y, z){
