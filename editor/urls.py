@@ -4,12 +4,12 @@ from . import views
 
 app_name = 'editor'
 urlpatterns = [
-	url(r'^$', views.loginPage, name='root'),
-	url(r'^login/', views.loginPage, name='loginPage'),
-	url(r'^register/', views.register, name='register'),
-	url(r'^app/', views.app, name='app'),
-	url(r'^mobile/', views.mobile, name='mobile'),
-	url(r'^createUser/', views.createUser, name='createUser'),
-	url(r'^loginAttempt/', views.loginAttempt, name='loginAttempt'),
-	url(r'^logoutAttempt', views.logoutAttempt, name='logoutAttempt'),
+	url(r'^$', views.loginPage, name='root'),								# Main page
+	url(r'^login/', views.loginPage, name='loginPage'),						# Login
+	url(r'^register/', views.register, name='register'),					# Register
+	url(r'^app/', views.app, name='app'),									# Editor
+	url(r'^mobile/', views.mobile, name='mobile'),							# Mobile view
+	url(r'^createUser/', views.createUser, name='createUser'),				# Registration code
+	url(r'^loginAttempt/', views.loginAttempt, name='loginAttempt'),		# Login code
+	url(r'^logoutAttempt', views.logoutAttempt, name='logoutAttempt'),		# Logout
 ]
