@@ -1,6 +1,6 @@
 function Furniture(model_filename, color_in){
-	this.mesh = null;
-	this.model_file = "";
+	this.mesh = new THREE.Object3D();
+	this.model_file = model_filename;
 	this.color = color_in;
 	
 	this.position = {"x": 0, "y": 0, "z": 0};
@@ -9,7 +9,7 @@ function Furniture(model_filename, color_in){
 }
 
 Furniture.prototype.loadModel = function(filename){
-	console.log("ASDFASDFASDFADSFADSFADSF");
+	console.log("Loading furniture model for ", filename);
 	// object loader
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
@@ -28,7 +28,8 @@ Furniture.prototype.loadModel = function(filename){
 			 		child.material = new THREE.MeshPhongMaterial( {color: this.color, wireframe: false, vertexColors: THREE.NoColors } );
 			  	}
 			}.bind(this));
-			this.mesh = object;
+			// this.mesh = object;
+			this.mesh.add(object);
 		}.bind(this), onProgress, onError );
 }
 

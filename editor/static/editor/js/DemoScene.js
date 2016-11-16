@@ -52,6 +52,15 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 			this.canJump = false;
 			break;
 
+		case 72: // h
+			var x = Math.random();
+			var fModel = "couch.obj";
+			if (x >= 0.5){
+				fModel = "deskchair.obj";
+			}
+			this.placeFurniture(fModel);
+			break;
+
 	}
 
 };
@@ -147,4 +156,25 @@ DesktopScene.prototype.EnableControls = function(){
 DesktopScene.prototype.DisableControls = function(){
 	this.controls.enabled = false;
 	this.controlsEnabled = false;
+};
+
+DesktopScene.prototype.placeFurniture = function(modelName){
+	var lookDirection = this.camera.getWorldDirection();
+	var cameraPos = this.controls.getObject().position.clone();
+	var rc = new THREE.Raycaster(cameraPos, lookDirection);
+	var floor = this.scene.getObjectByName("floorplane");
+	var intersect = rc.intersectObject(floor, false);
+	if (intersect.length > 0){
+		var p = intersect[0].point;
+		console.log(p);
+		var geometry = new THREE.SphereGeometry(6, 50, 50);
+		var material = new THREE.MeshPhongMaterial({color: 0xff0000});
+		var pointMesh = new THREE.Mesh(geometry, material);
+		pointMesh.position.set(p.x, p.y, p.z);
+		this.scene.add(pointMesh);
+		console.log(pointMesh);
+		// var newFurniture = new Furniture(modelName, 0xf442f1);
+		// this.room.addFurniture(newFurniture, p.x, p.y, p.z);
+		// console.log("Added furniture");
+	}
 };

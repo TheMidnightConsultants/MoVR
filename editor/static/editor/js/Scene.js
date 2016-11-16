@@ -42,18 +42,19 @@ function Scene(){
 	material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
 	mesh = new THREE.Mesh( geometry, material );
+	mesh.name = "floorplane";
 	this.scene.add( mesh );
 
 	
 	this.room = new Room(120, 120, 50, 0xAA2288);
 	this.scene.add(this.room.mesh);
 
-// 	var testCouch = new Furniture("couch.obj", 0x736283);
-// 	this.room.addFurniture(testCouch, 0, 0, 0);
+	var testCouch = new Furniture("couch.obj", 0xf442f1);
+	this.room.addFurniture(testCouch, 0, 0, 0);
 
 
 	// object loader
-/*	
+	
 	var onProgress = function ( xhr ) {
 		if ( xhr.lengthComputable ) {
 			var percentComplete = xhr.loaded / xhr.total * 100;
@@ -64,20 +65,20 @@ function Scene(){
 	var onError = function ( xhr ) {
 	};
 	
-	var loader = new THREE.OBJLoader();
-	loader.load('/static/editor/models/couch.obj',
-		function(object){
-			object.traverse( function(child) {
-			 	if (child instanceof THREE.Mesh){
-			 		// child.material = new THREE.MeshBasicMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
-			 		child.material = new THREE.MeshPhongMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
-			  	}
-			});
-			object.position.y = 4;
-			object.scale.set(5,5,5);
-			this.scene.add(object);
-		}.bind(this), onProgress, onError );
-*/
+	// var loader = new THREE.OBJLoader();
+	// loader.load('/static/editor/models/couch.obj',
+	// 	function(object){
+	// 		object.traverse( function(child) {
+	// 		 	if (child instanceof THREE.Mesh){
+	// 		 		// child.material = new THREE.MeshBasicMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
+	// 		 		child.material = new THREE.MeshPhongMaterial( {color: 0x445599, wireframe: false, vertexColors: THREE.NoColors } );
+	// 		  	}
+	// 		});
+	// 		object.position.y = 4;
+	// 		object.scale.set(5,5,5);
+	// 		this.scene.add(object);
+	// 	}.bind(this), onProgress, onError );
+
 
 
 	//
