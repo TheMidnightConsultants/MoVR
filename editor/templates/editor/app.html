@@ -57,8 +57,6 @@
 				{% endif %}
 
 				<div id="debugButtons">
-					<button id="playBtn" type="button">Click to start the app</button>
-					<br/>
 					<button id="helpBtn" type="button">Click to see the help screen</button>
 					<br/>
 					<button id="furnitureBtn" type="button">View the furniture menu</button> 
@@ -78,6 +76,10 @@
 		<div id="helpMenu" class="menu">
 			Welcome to the Help Menu! There is lots of information here to help you use our application!
 		</div>
+		
+		<div id="inputMenu" class="menu">
+			<!-- this will get filled in by whatever needs to get input -->
+		</div>
     </div>
 	
 	<form action="" method="post">{% csrf_token %}</form>
@@ -87,6 +89,7 @@
 	<script src="/static/editor/js/Util.js"></script>
 	<script src="/static/editor/js/Scene.js"></script>
 	<script src="/static/editor/js/DemoScene.js"></script>
+	<script src="/static/editor/js/InputManager.js"></script>
 	<script src="/static/editor/js/MenuManager.js"></script>
 	<script src="/static/editor/js/RoomManager.js"></script>
 	<script src="/static/editor/js/OBJLoader.js"></script>
@@ -96,13 +99,15 @@
 	<script>
 		var userId = {{ user.pk }};
 		var scene = new DesktopScene();
-		var menuManager = new MenuManager(scene);
-		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', userId,'authorized');
+		var inputManager = new InputManager('inputMenu');
+		var menuManager = new MenuManager(scene, inputManager);
+		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', userId, 'authorized', scene, menuManager);
 		roomManager.update();
 		
 		menuManager.addMenu('mainMenu');
 		menuManager.addMenu('furnitureMenu');
 		menuManager.addMenu('helpMenu');
+		menuManager.addMenu('inputMenu');
 		menuManager.registerNavBtn('mainMenu', 'mainMenuBtn');
 		menuManager.registerNavBtn('furnitureMenu', 'furnitureBtn');
 		menuManager.registerNavBtn('helpMenu', 'helpBtn');

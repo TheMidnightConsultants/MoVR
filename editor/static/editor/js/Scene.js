@@ -45,8 +45,8 @@ function Scene(){
 	this.scene.add( mesh );
 
 	
-	this.room = new Room(120, 120, 50, 0xAA2288);
-	this.scene.add(this.room.mesh);
+//	this.room = new Room(120, 120, 50, 0xAA2288);
+//	this.scene.add(this.room.mesh);
 
 // 	var testCouch = new Furniture("couch.obj", 0x736283);
 // 	this.room.addFurniture(testCouch, 0, 0, 0);
@@ -92,6 +92,16 @@ function Scene(){
 
 	window.addEventListener( 'resize', this.onWindowResize.bind(this), false );
 };
+
+Scene.prototype.addRoom = function(room){
+	room.mesh.name = 'ROOM';
+	this.scene.add(room.mesh);
+}
+
+Scene.prototype.clearRooms = function(){
+	var obj = this.scene.getObjectByName('ROOM');
+	this.scene.remove(obj);
+}
 
 Scene.prototype.onWindowResize = function() {
 	//update 3D scene
