@@ -174,6 +174,7 @@ DesktopScene.prototype.placeFurniture = function(modelName){
 		// this.scene.add(pointMesh);
 		// console.log(pointMesh);
 		var newFurniture = new Furniture(modelName, 0xf442f1);
+		console.log(this);
 		this.room.addFurniture(newFurniture, p.x, p.y, p.z);
 		console.log("Added furniture");
 	}

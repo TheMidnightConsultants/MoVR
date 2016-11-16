@@ -82,6 +82,7 @@ function Scene(){
 
 Scene.prototype.addRoom = function(room){
 	room.mesh.name = 'ROOM';
+	this.room = room;
 	this.scene.add(room.mesh);
 }
 
