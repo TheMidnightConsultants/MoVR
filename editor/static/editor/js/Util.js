@@ -20,6 +20,20 @@ Util.POST = function(url, args, callback) {
     req.send(data);
 };
 
+Util.GET = function(url, callback) {
+	var req = new XMLHttpRequest();
+	req.open('get', url, ture);
+	req.onload = function(){
+		var status = req.status;
+		if (status == 200){
+			callback(null, req.response);
+		} else {
+			callback(status);
+		}
+	};
+	req.send();
+};
+
 Util.getCookie = function (name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -34,4 +48,10 @@ Util.getCookie = function (name) {
         }
     }
     return cookieValue;
-}
+};
+
+Util.removeChildren = function(DOMobject){
+	while (DOMobject.firstChild) {
+		DOMobject.removeChild(DOMobject.firstChild);
+	}
+};

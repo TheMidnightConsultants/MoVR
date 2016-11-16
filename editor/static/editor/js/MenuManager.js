@@ -1,14 +1,15 @@
 /* MenuManager - owns the menu overlay (blocker) and all the menus which the user might be shown.
 	Keeps track of the previously visited menu to enable "go back" functionality.
 */
-function MenuManager( scene ) {
+function MenuManager( scene, inputManager ) {
 	console.log('instantiating a MenuManager');
 		
 	//hard-coded blocker ID
 	this.blocker = document.getElementById( 'blocker' );
-	//only need the PlayButton temporarily: will get replaced with something else later
-	this.playButton = document.getElementById( 'playBtn' );
 	
+	this.inputManager = inputManager;
+	
+	this.inputManager
 	this.currentMenu = 'none';
 	this.prevMenu = 'none';
 	this.menus = [];
@@ -48,14 +49,14 @@ function MenuManager( scene ) {
 		document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
 		document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
 
-		this.playButton.addEventListener( 'click', function ( event ) {
+		MenuManager.prototype.startApp = function () {
 			
 			// Ask the browser to lock the pointer
 			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
 			if ( /Firefox/i.test( navigator.userAgent ) ) {
 
-				var fullscreenchange = function ( event ) {
+				var fullscreenchange = function () {
 
 					if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
 
@@ -80,11 +81,7 @@ function MenuManager( scene ) {
 
 			}
 
-		}, false );
-
-	} else {
-
-		this.playButton.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+		};
 
 	}	
 };
@@ -131,3 +128,11 @@ MenuManager.prototype.hideAll = function () {
 		this.menus[key].style.display = 'none';
 	}, this);
 };
+
+MenuManager.prototype.getInput = function(fields, callback){
+	for (var i = 0; i < fields.length; i++){
+		this.inputManager.addInput(fields[i].tag, fields[i].type);
+	}
+	this.inputManager.setCallback(callback);
+	this.switchMenu('inputMenu');
+}

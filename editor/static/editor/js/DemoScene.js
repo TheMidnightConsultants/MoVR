@@ -171,6 +171,7 @@ DesktopScene.prototype.placeFurniture = function(modelName){
 		var p = intersect[0].point;
 		// console.log(p);
 		var newFurniture = new Furniture(modelName, 0xf442f1);
+		console.log(this);
 		this.room.addFurniture(newFurniture, p.x, p.y, p.z);
 		console.log("Added furniture");
 	}
