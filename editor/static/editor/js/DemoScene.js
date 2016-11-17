@@ -53,12 +53,15 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 			break;
 
 		case 72: // h
-			var x = Math.random();
-			var fModel = "1";
-			if (x >= 0.5){
-				fModel = "2";
-			}
-			this.placeFurniture(fModel);
+			this.placeFurniture("1");
+			break;
+
+		case 71: // g
+			this.placeFurniture("2");
+			break;
+
+		case 74: // j
+			this.pickFurniture();
 			break;
 
 	}
@@ -166,16 +169,26 @@ DesktopScene.prototype.placeFurniture = function(modelName){
 	var intersect = rc.intersectObject(floor, false);
 	if (intersect.length > 0){
 		var p = intersect[0].point;
-		console.log(p);
-		// var geometry = new THREE.SphereGeometry(6, 50, 50);
-		// var material = new THREE.MeshPhongMaterial({color: 0xff0000});
-		// var pointMesh = new THREE.Mesh(geometry, material);
-		// pointMesh.position.set(p.x, p.y, p.z);
-		// this.scene.add(pointMesh);
-		// console.log(pointMesh);
+		// console.log(p);
 		var newFurniture = new Furniture(modelName, 0xf442f1);
 		console.log(this);
 		this.room.addFurniture(newFurniture, p.x, p.y, p.z);
 		console.log("Added furniture");
 	}
 };
+
+DesktopScene.prototype.pickFurniture = function(){
+	var lookDirection = this.camera.getWorldDirection();
+	var cameraPos = this.controls.getObject().position.clone();
+	var rc = new THREE.Raycaster(cameraPos, lookDirection);
+	var intersect = rc.intersectObject(this.room.furniture, true);
+	if (intersect.length > 0){
+		var nearest = intersect[0].object.parent;
+		console.log(nearest);
+		nearest.traverse(function(child){
+			if (child instanceof THREE.Mesh){
+				child.material = new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false, vertexColors: THREE.NoColors });
+			}
+		});
+	}
+}
