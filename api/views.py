@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 import json
-from .models import Room
+from .models import Room, Furniture
+from MoVR.settings import MODELS_DIR
 
 def __authTokenValid(user_id, auth_token):
 	return auth_token[0] == 'a';
@@ -54,3 +55,17 @@ def deleteRoom(request):
 		return JsonResponse({'status':'failed', 'msg':'user does not own that room'})
 	rooms.delete()
 	return JsonResponse({'status':'ok'})
+	
+def listFurniture(request):
+	furniture = Furniture.objects.filter()
+	response = {}
+	for entry in furniture:
+		response[entry.pk] = entry.name
+	return JsonResponse({'status':'ok', 'data':response})
+	
+def loadModel(request, model_id):
+	model_entry = Furniture.objects.filter(pk=model_id)
+	if (len(model_entry) != 1):
+		return JsonResponse({'status':'failed', 'msg':'model does not exist'})
+	file = open(MODELS_DIR + model_entry[0].filename)
+	return HttpResponse(file, content_type='text/plain')

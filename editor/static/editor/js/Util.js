@@ -22,7 +22,8 @@ Util.POST = function(url, args, callback) {
 
 Util.GET = function(url, callback) {
 	var req = new XMLHttpRequest();
-	req.open('get', url, ture);
+	req.open('get', url, true);
+    req.responseType = 'json'; 
 	req.onload = function(){
 		var status = req.status;
 		if (status == 200){

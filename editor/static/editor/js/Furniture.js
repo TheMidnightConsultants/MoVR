@@ -1,9 +1,8 @@
-function Furniture(model_filename, color_in){
+function Furniture(model_id, color_in){
 	this.mesh = new THREE.Object3D();
-	this.model_file = model_filename;
 	this.color = color_in;
 	
-	this.loadModel(model_filename);
+	this.loadModel(model_id);
 
 	this.setPosition(0,0,0);
 }
@@ -12,14 +11,14 @@ Furniture.loadedModels = {};
 
 Furniture.loader = new THREE.OBJLoader();
 
-Furniture.prototype.loadModel = function(filename){
-	if (filename in Furniture.loadedModels){
-		console.log("Model already loaded for ",filename);
-		this.cloneLoadedMesh(filename);
+Furniture.prototype.loadModel = function(model_id){
+	if (model_id in Furniture.loadedModels){
+		console.log("Model already loaded for ", model_id);
+		this.cloneLoadedMesh(model_id);
 		return;
 	}
 
-	console.log("Loading furniture model for ", filename);
+	console.log("Loading furniture model for ", model_id);
 
 	// object loader functions
 	var onProgress = function ( xhr ) {
@@ -31,20 +30,20 @@ Furniture.prototype.loadModel = function(filename){
 	var onError = function ( xhr ) {
 	};
 	
-	Furniture.loader.load('/static/editor/models/'+filename,
+	Furniture.loader.load('/api/loadmodel/'+model_id+'/',
 		function(object){
 			object.traverse( function(child) {
 			 	if (child instanceof THREE.Mesh){
 			 		child.material = new THREE.MeshPhongMaterial( {color: this.color, wireframe: false, vertexColors: THREE.NoColors } );
 			  	}
 			}.bind(this));
-			Furniture.loadedModels[filename] = object;
-			this.cloneLoadedMesh(filename);
+			Furniture.loadedModels[model_id] = object;
+			this.cloneLoadedMesh(model_id);
 		}.bind(this), onProgress, onError );
 }
 
-Furniture.prototype.cloneLoadedMesh = function(filename){
-	this.mesh.add(Furniture.loadedModels[filename].clone());
+Furniture.prototype.cloneLoadedMesh = function(model_id){
+	this.mesh.add(Furniture.loadedModels[model_id].clone());
 }
 
 Furniture.prototype.setPosition = function(x, y, z){

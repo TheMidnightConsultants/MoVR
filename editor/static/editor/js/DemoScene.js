@@ -54,9 +54,9 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 
 		case 72: // h
 			var x = Math.random();
-			var fModel = "couch.obj";
+			var fModel = "1";
 			if (x >= 0.5){
-				fModel = "deskchair.obj";
+				fModel = "2";
 			}
 			this.placeFurniture(fModel);
 			break;
