@@ -45,6 +45,7 @@ Furniture.prototype.loadModel = function(model_id){
 Furniture.prototype.cloneLoadedMesh = function(model_id){
 	var cloneModel = Furniture.loadedModels[model_id].clone();
 	this.mesh.add(cloneModel);
+	console.log("New furniture mesh",this.mesh);
 }
 
 Furniture.prototype.setPosition = function(x, y, z){

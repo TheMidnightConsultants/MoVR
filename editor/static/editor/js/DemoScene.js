@@ -19,6 +19,8 @@ function DesktopScene(){
 
 	document.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
 	document.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
+
+	this.temp = null;
 	
 	this.animate();
 };
@@ -60,10 +62,23 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 			this.placeFurniture("2");
 			break;
 
-		case 74: // j
-			this.pickFurniture();
+		case 70: // f
+			this.temp = this.pickFurniture();
+			console.log("Selected:", this.temp);
 			break;
 
+		case 69: // e
+			if (this.temp != null){
+				var rc = this.getCameraRaycaster();
+				var intersect = this.getFloorRaycast(rc);
+				if (intersect.length > 0){
+					var p = intersect[0].point;
+					console.log("Moving to",p);
+					this.temp.position.set(p.x, p.y, p.z);
+					this.temp = null;
+				}
+			}
+			break;
 	}
 
 };
@@ -91,7 +106,6 @@ DesktopScene.prototype.onKeyUp = function ( event ) {
 		case 68: // d
 			this.moveRight = false;
 			break;
-			
 
 	}
 
@@ -161,12 +175,24 @@ DesktopScene.prototype.DisableControls = function(){
 	this.controlsEnabled = false;
 };
 
-DesktopScene.prototype.placeFurniture = function(modelName){
+DesktopScene.prototype.getCameraRaycaster = function(){
 	var lookDirection = this.camera.getWorldDirection();
 	var cameraPos = this.controls.getObject().position.clone();
 	var rc = new THREE.Raycaster(cameraPos, lookDirection);
+	return rc;
+};
+
+DesktopScene.prototype.getFloorRaycast = function(rc){
 	var floor = this.scene.getObjectByName("floorplane");
 	var intersect = rc.intersectObject(floor, false);
+	return intersect;
+};
+
+DesktopScene.prototype.placeFurniture = function(modelName){
+	var rc = this.getCameraRaycaster();
+	// var floor = this.scene.getObjectByName("floorplane");
+	// var intersect = rc.intersectObject(floor, false);
+	var intersect = this.getFloorRaycast(rc);
 	if (intersect.length > 0){
 		var p = intersect[0].point;
 		// console.log(p);
@@ -178,17 +204,11 @@ DesktopScene.prototype.placeFurniture = function(modelName){
 };
 
 DesktopScene.prototype.pickFurniture = function(){
-	var lookDirection = this.camera.getWorldDirection();
-	var cameraPos = this.controls.getObject().position.clone();
-	var rc = new THREE.Raycaster(cameraPos, lookDirection);
+	var rc = this.getCameraRaycaster();
 	var intersect = rc.intersectObject(this.room.furniture, true);
 	if (intersect.length > 0){
-		var nearest = intersect[0].object.parent;
-		console.log(nearest);
-		nearest.traverse(function(child){
-			if (child instanceof THREE.Mesh){
-				child.material = new THREE.MeshPhongMaterial({color: 0xff0000, wireframe: false, vertexColors: THREE.NoColors });
-			}
-		});
+		var nearest = intersect[0].object.parent.parent;
+		return nearest;
 	}
-}
+	return null;
+};
