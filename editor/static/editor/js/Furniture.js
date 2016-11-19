@@ -60,6 +60,10 @@ Furniture.prototype.setPosition = function(x, y, z){
 	this.mesh.position.z = z;
 }
 
+Furniture.prototype.rotateYaw = function(radians){
+	this.mesh.rotateY(radians);
+}
+
 Furniture.prototype.setScale = function(x, y, z){
 	this.mesh.scale.set(x,y,z);
 }

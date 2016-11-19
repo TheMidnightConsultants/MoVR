@@ -1,10 +1,8 @@
 function Room( width_in, length_in, height_in, wallcolor_in ){
 	
-	//this.dimensions = [width_in, length_in];
-	this.dimensions = [100, 100];
+	this.dimensions = [width_in, length_in];
  	this.wall_color = wallcolor_in;
-	//this.room_height = height_in;
-	this.room_height = 40;
+	this.room_height = height_in;
 
 	/*
 	 * 	    	    		Room.mesh
@@ -44,4 +42,8 @@ function Room( width_in, length_in, height_in, wallcolor_in ){
 
 Room.prototype.addFurniture = function(furniture_obj){
 	this.furniture.add(furniture_obj.mesh); // add to furniture mesh
+}
+
+Room.prototype.removeFurniture = function(furniture_obj){
+	this.furniture.remove(furniture_obj.mesh);
 }

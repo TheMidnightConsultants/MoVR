@@ -50,6 +50,18 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 		case 68: // d
 			this.moveRight = true;
 			break;
+			
+		case 81: // q
+			this.rotateClockwise = true;
+			break;
+			
+		case 69: // e
+			this.rotateCounterClockwise = true;
+			break;
+			
+		case 46: // delete
+			this.removeHoverFurniture();
+			break;
 	}
 
 };
@@ -77,7 +89,14 @@ DesktopScene.prototype.onKeyUp = function ( event ) {
 		case 68: // d
 			this.moveRight = false;
 			break;
-
+			
+		case 81: // q
+			this.rotateClockwise = false;
+			break;
+			
+		case 69: // e
+			this.rotateCounterClockwise = false;
+			break;
 	}
 
 };
@@ -109,6 +128,11 @@ DesktopScene.prototype.animate = function() {
 
 		if ( this.moveLeft ) velocity.x -= 12 * 300.0 * delta;
 		if ( this.moveRight ) velocity.x += 12 * 300.0 * delta;
+		
+		if ( this.hoverFurniture != null){
+			if ( this.rotateClockwise ) this.hoverFurniture.rotateYaw(0.05);
+			if ( this.rotateCounterClockwise ) this.hoverFurniture.rotateYaw(-0.05);
+		}
 
 		var controlObj = this.controls.getObject();
 
@@ -169,6 +193,15 @@ DesktopScene.prototype.getCameraRaycaster = function(){
 DesktopScene.prototype.addHoverFurniture = function(model_id){
 	this.hoverFurniture = new Furniture(model_id, 0xf442f1);
 	this.scene.add(this.hoverFurniture.mesh);
+}
+
+DesktopScene.prototype.removeHoverFurniture = function(){
+	if (this.hoverFurniture != null){
+		console.log("removing hoverFurniture");
+		this.scene.remove(this.hoverFurniture.mesh);
+		this.room.removeFurniture(this.hoverFurniture);
+		this.hoverFurniture = null;
+	}
 }
 
 DesktopScene.prototype.getFloorRaycast = function(rc){
