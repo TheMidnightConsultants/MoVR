@@ -92,7 +92,7 @@ RoomManager.prototype.loadRoom = function(roomId){
 	//functionality doesn't exist yet
 	console.log(this.scene);
 	this.scene.clearRooms();
-	var room = new Room(roomId, roomId, roomId, 0x808080);
+	var room = new Room(roomId*12, roomId*12, roomId*12, 0x808080);
 	this.scene.addRoom(room);
 }
 

@@ -50,11 +50,6 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 		case 68: // d
 			this.moveRight = true;
 			break;
-
-		case 32: // space
-			if ( this.canJump === true ) this.velocity.y += 350;
-			this.canJump = false;
-			break;
 	}
 
 };
@@ -101,12 +96,6 @@ DesktopScene.prototype.animate = function() {
 	requestAnimationFrame( this.animate.bind(this) );
 
 	if ( this.controlsEnabled ) {
-		this.raycaster.ray.origin.copy( this.controls.getObject().position );
-		this.raycaster.ray.origin.y -= 10;
-
-		var intersections = this.raycaster.intersectObjects( this.objects );
-
-		var isOnObject = intersections.length > 0;
 
 		var time = performance.now();
 		var delta = ( time - this.prevTime ) / 1000;
@@ -115,32 +104,39 @@ DesktopScene.prototype.animate = function() {
 		velocity.x -= velocity.x * 10.0 * delta;
 		velocity.z -= velocity.z * 10.0 * delta;
 
-		velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+		if ( this.moveForward ) velocity.z -= 12 * 300.0 * delta;
+		if ( this.moveBackward ) velocity.z += 12 * 300.0 * delta;
 
-		if ( this.moveForward ) velocity.z -= 400.0 * delta;
-		if ( this.moveBackward ) velocity.z += 400.0 * delta;
+		if ( this.moveLeft ) velocity.x -= 12 * 300.0 * delta;
+		if ( this.moveRight ) velocity.x += 12 * 300.0 * delta;
 
-		if ( this.moveLeft ) velocity.x -= 400.0 * delta;
-		if ( this.moveRight ) velocity.x += 400.0 * delta;
+		var controlObj = this.controls.getObject();
 
-		if ( isOnObject === true ) {
-			velocity.y = Math.max( 0, velocity.y );
-
-			this.canJump = true;
+		if (this.room){
+			var limX = this.room.dimensions[0] / 2;
+			var limZ = this.room.dimensions[1] / 2;
+			var changed = false;
+			var worldPos = controlObj.getWorldPosition(); // get world position
+			var worldVel = new THREE.Vector3().copy(velocity);
+			controlObj.localToWorld(worldVel); // translate local vel to world
+			if (worldPos.x > limX - 6 || worldPos.x < 6 - limX){
+				worldVel.x = 0;
+				changed = true;
+			 	// console.log("X hit limit");
+			}
+			if (worldPos.z > limZ - 6 || worldPos.z < 6 - limZ){
+				worldVel.z = 0;
+				changed = true;
+			 	// console.log("Z hit limit");
+			}
+			if (changed){
+				controlObj.worldToLocal(worldVel);
+				velocity.copy(worldVel);
+			}
 		}
 
-		this.controls.getObject().translateX( velocity.x * delta );
-		this.controls.getObject().translateY( velocity.y * delta );
-		this.controls.getObject().translateZ( velocity.z * delta );
-
-		if ( this.controls.getObject().position.y < 10 ) {
-
-			velocity.y = 0;
-			this.controls.getObject().position.y = 10;
-
-			this.canJump = true;
-
-		}
+		controlObj.translateX( velocity.x * delta );
+		controlObj.translateZ( velocity.z * delta );
 
 		this.prevTime = time;
 

@@ -16,6 +16,7 @@ function Scene(){
 
 	this.raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
 
+	/*
 	// floor
 
 	geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
@@ -44,6 +45,7 @@ function Scene(){
 	mesh = new THREE.Mesh( geometry, material );
 	mesh.name = "floorplane";
 	this.scene.add( mesh );
+	*/
 
 	
 //	this.room = new Room(120, 120, 50, 0xAA2288);
