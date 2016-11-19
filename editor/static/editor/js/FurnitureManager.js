@@ -1,9 +1,11 @@
-function FurnitureManager(furnitureList, menuManager){
+function FurnitureManager(furnitureList, scene, menuManager){
 	console.log('initializing FurnitureManager');
-	this.furnitureList = document.getElementById(furnitureList);
+	this.scene = scene;
 	this.menuManager = menuManager;
+	
+	this.furnitureList = document.getElementById(furnitureList);
 		
-	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), false);
+	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), true);
 };
 
 FurnitureManager.prototype.update = function(){
@@ -32,8 +34,9 @@ FurnitureManager.prototype.onFurnitureClick = function(event){
 	var furnitureId = event.target.id;
 	if (!furnitureId.startsWith('_f_')){
 		return;
-	} else {
-		furnitureId = furnitureId.substring(3);
 	}
+	furnitureId = furnitureId.substring(3);
 	console.log("clicked " + furnitureId);
+	this.scene.addHoverFurniture(furnitureId);
+	this.menuManager.startApp();
 }

@@ -4,6 +4,7 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
 	this.roomNames = [];
 	this.scene = scene;
 	this.menuManager = menuManager;
+	this.loadedRoom = -1;
 	
 	this.deleting = false;
 	this.duplicating = false;
@@ -16,7 +17,7 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
 		this.userId = userId;
 		this.authToken = authToken;
 		
-		this.roomList.addEventListener('click', RoomManager.prototype.onRoomClick.bind(this), false);
+		this.roomList.addEventListener('click', RoomManager.prototype.onRoomClick.bind(this), true);
 		
 		this.addBtn.addEventListener('click', function(event){
 			var fields = new Array({'tag':'name', 'type':'text'}, {'tag':'width', 'type':'number'}, 
@@ -109,7 +110,10 @@ RoomManager.prototype.onRoomClick = function(event){
 		//duplicate the room
 	} else {
 		//load the room they clicked on and start the app
-		this.loadRoom(roomId);
+		if (this.loadedRoom != roomId){
+			this.loadRoom(roomId);
+		}
+		this.menuManager.switchMenu('furnitureMenu');
 		this.menuManager.startApp();
 	}
 	console.log("clicked " + roomId);

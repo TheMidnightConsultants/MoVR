@@ -9,10 +9,10 @@ function MenuManager( scene, inputManager ) {
 	
 	this.inputManager = inputManager;
 	
-	this.inputManager
 	this.currentMenu = 'none';
 	this.prevMenu = 'none';
 	this.menus = [];
+	this.scene = scene;
 
 	this.havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 

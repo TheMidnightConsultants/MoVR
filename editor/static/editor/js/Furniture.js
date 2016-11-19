@@ -1,10 +1,16 @@
 function Furniture(model_id, color_in){
+	if (typeof model_id === 'undefined'){
+		return;
+	}
+	
 	this.mesh = new THREE.Object3D();
 	this.color = color_in;
 	
 	this.loadModel(model_id);
 
 	this.setPosition(0,0,0);
+	
+	this.mesh.asFurniture = this;
 }
 
 Furniture.loadedModels = {};

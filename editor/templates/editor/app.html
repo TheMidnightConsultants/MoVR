@@ -20,23 +20,24 @@
     <button id="hideButton" class="fluid ui grey button" tabindex="0">Hide</button>
     -->
     <div id="blocker">
-		<div id="header">
-			{% if not user.username %}
-			You are not logged in.
-			{% else %}
-			{{ user.username }}'s rooms
-			{% endif %}
-		</div>
 	
 		<div id="mainMenu" class="menu">
 			
+			<div class="header">
+				{% if not user.username %}
+				You are not logged in.
+				{% else %}
+				{{ user.username }}'s rooms
+				{% endif %}
+			</div>
+		
 			<div id="roomslist" class="list container">
 				<div class="ui segment">
 					<ul id="roomslistUL">
 				</div>
 			</div>
 
-			<div id="rightbar">
+			<div class="rightbar">
 				<button id="addroomBtn" class="fluid ui animated green icon button" tabindex="0">
 					<div class="visible content"><i class="fa fa-plus"></i></div>
 					<div class="hidden content">Add Room</div>
@@ -66,11 +67,25 @@
 			</div>
 		</div>
 		
-		<div id="furnitureMenu" class="menu">					
+		<div id="furnitureMenu" class="menu">
+			<div class="header">
+				Available Furniture
+			</div>
 			<div id="furniturelist" class="list container">
 				<div class="ui segment">
 					<ul id="furniturelistUL">
 				</div>
+			</div>
+			
+			<div class="rightbar">
+				<button id="exitFurnitureMenuBtn" class="fluid ui animated green icon button" tabindex="0">
+					<div class="visible content"><i class="fa fa-remove"></i></div>
+					<div class="hidden content">Exit This Menu</div>
+				</button>
+				<button id="leaveroomBtn" class="fluid ui animated red icon button" tabindex="0">
+					<div class="visible content"><i class="fa fa-remove"></i></div>
+					<div class="hidden content">Exit This Room</div>
+				</button> 
 			</div>
 		</div>
 
@@ -103,7 +118,7 @@
 		var scene = new DesktopScene();
 		var inputManager = new InputManager('inputMenu');
 		var menuManager = new MenuManager(scene, inputManager);
-		var furnitureManager = new FurnitureManager('furniturelistUL', menuManager);
+		var furnitureManager = new FurnitureManager('furniturelistUL', scene, menuManager);
 		var roomManager = new RoomManager('roomslistUL', 'addroomBtn', 'copyroomBtn', 'deleteroomBtn', userId, 'authorized', scene, menuManager);
 		furnitureManager.update();
 		roomManager.update();
@@ -115,9 +130,11 @@
 		menuManager.registerNavBtn('mainMenu', 'mainMenuBtn');
 		menuManager.registerNavBtn('furnitureMenu', 'furnitureBtn');
 		menuManager.registerNavBtn('helpMenu', 'helpBtn');
+		menuManager.registerNavBtn('mainMenu', 'leaveroomBtn');
 		//JMIL: these next 2 are temporary, until we get the actual functionality going
-		menuManager.registerNavBtn('mainMenu', 'furnitureMenu');
 		menuManager.registerNavBtn('mainMenu', 'helpMenu');
+		
+		document.getElementById('exitFurnitureMenuBtn').addEventListener('click', menuManager.startApp, true);
 		
 		menuManager.hideAll();
 		menuManager.switchMenu('mainMenu');

@@ -19,8 +19,10 @@ function DesktopScene(){
 
 	document.addEventListener( 'keydown', this.onKeyDown.bind(this), false );
 	document.addEventListener( 'keyup', this.onKeyUp.bind(this), false );
+	document.addEventListener( 'click', this.onClick.bind(this), false );
 
 	this.temp = null;
+	this.hoverFurniture = null;
 	
 	this.animate();
 };
@@ -53,32 +55,6 @@ DesktopScene.prototype.onKeyDown = function ( event ) {
 			if ( this.canJump === true ) this.velocity.y += 350;
 			this.canJump = false;
 			break;
-
-		case 72: // h
-			this.placeFurniture("1");
-			break;
-
-		case 71: // g
-			this.placeFurniture("2");
-			break;
-
-		case 70: // f
-			this.temp = this.pickFurniture();
-			console.log("Selected:", this.temp);
-			break;
-
-		case 69: // e
-			if (this.temp != null){
-				var rc = this.getCameraRaycaster();
-				var intersect = this.getFloorRaycast(rc);
-				if (intersect.length > 0){
-					var p = intersect[0].point;
-					console.log("Moving to",p);
-					this.temp.position.set(p.x, p.y, p.z);
-					this.temp = null;
-				}
-			}
-			break;
 	}
 
 };
@@ -109,6 +85,16 @@ DesktopScene.prototype.onKeyUp = function ( event ) {
 
 	}
 
+};
+
+DesktopScene.prototype.onClick = function ( event ) {
+	if (this.controlsEnabled){
+		if (this.hoverFurniture != null){
+			this.placeFurniture();
+		} else {
+			this.hoverFurniture = this.pickFurniture();
+		}
+	}
 };
 
 DesktopScene.prototype.animate = function() {
@@ -161,18 +147,20 @@ DesktopScene.prototype.animate = function() {
 	} else {
 		this.prevTime = performance.now();
 	}
+	
+	this.updateHoverPosition();
 
 	this.renderer.render( this.scene, this.camera );
-};
-
-DesktopScene.prototype.EnableControls = function(){
-	this.controls.enabled = true;
-	this.controlsEnabled = true;
 };
 
 DesktopScene.prototype.DisableControls = function(){
 	this.controls.enabled = false;
 	this.controlsEnabled = false;
+};
+
+DesktopScene.prototype.EnableControls = function(){
+	this.controls.enabled = true;
+	this.controlsEnabled = true;
 };
 
 DesktopScene.prototype.getCameraRaycaster = function(){
@@ -182,24 +170,28 @@ DesktopScene.prototype.getCameraRaycaster = function(){
 	return rc;
 };
 
+DesktopScene.prototype.addHoverFurniture = function(model_id){
+	this.hoverFurniture = new Furniture(model_id, 0xf442f1);
+	this.scene.add(this.hoverFurniture.mesh);
+}
+
 DesktopScene.prototype.getFloorRaycast = function(rc){
 	var floor = this.scene.getObjectByName("floorplane");
 	var intersect = rc.intersectObject(floor, false);
 	return intersect;
 };
 
-DesktopScene.prototype.placeFurniture = function(modelName){
+DesktopScene.prototype.placeFurniture = function(){
 	var rc = this.getCameraRaycaster();
 	// var floor = this.scene.getObjectByName("floorplane");
 	// var intersect = rc.intersectObject(floor, false);
 	var intersect = this.getFloorRaycast(rc);
 	if (intersect.length > 0){
-		var p = intersect[0].point;
-		// console.log(p);
-		var newFurniture = new Furniture(modelName, 0xf442f1);
-		console.log(this);
-		this.room.addFurniture(newFurniture, p.x, p.y, p.z);
-		console.log("Added furniture");
+		//console.log(this);
+		this.scene.remove(this.hoverFurniture.mesh);
+		this.room.addFurniture(this.hoverFurniture);
+		this.hoverFurniture = null;
+		//console.log("Added furniture");
 	}
 };
 
@@ -208,7 +200,19 @@ DesktopScene.prototype.pickFurniture = function(){
 	var intersect = rc.intersectObject(this.room.furniture, true);
 	if (intersect.length > 0){
 		var nearest = intersect[0].object.parent.parent;
-		return nearest;
+		return nearest.asFurniture;
 	}
 	return null;
+};
+
+DesktopScene.prototype.updateHoverPosition = function(){
+	if (this.hoverFurniture == null){
+		return;
+	}
+	var rc = this.getCameraRaycaster();
+	var intersect = this.getFloorRaycast(rc);
+	if (intersect.length > 0){
+		var p = intersect[0].point;
+		this.hoverFurniture.setPosition(p.x, p.y, p.z);
+	}
 };
