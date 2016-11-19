@@ -182,17 +182,9 @@ DesktopScene.prototype.getFloorRaycast = function(rc){
 };
 
 DesktopScene.prototype.placeFurniture = function(){
-	var rc = this.getCameraRaycaster();
-	// var floor = this.scene.getObjectByName("floorplane");
-	// var intersect = rc.intersectObject(floor, false);
-	var intersect = this.getFloorRaycast(rc);
-	if (intersect.length > 0){
-		//console.log(this);
-		this.scene.remove(this.hoverFurniture.mesh);
-		this.room.addFurniture(this.hoverFurniture);
-		this.hoverFurniture = null;
-		//console.log("Added furniture");
-	}
+	this.scene.remove(this.hoverFurniture.mesh);
+	this.room.addFurniture(this.hoverFurniture);
+	this.hoverFurniture = null;
 };
 
 DesktopScene.prototype.pickFurniture = function(){
