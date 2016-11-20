@@ -237,3 +237,36 @@ DesktopScene.prototype.updateHoverPosition = function(){
 		this.hoverFurniture.setPosition(p.x, p.y, p.z);
 	}
 };
+
+DesktopScene.prototype.getHoverDimensions = function(){
+	if (this.hoverFurniture == null){
+		return null;
+	} else {
+		return this.hoverFurniture.getDimensions();
+	}
+}
+
+DesktopScene.prototype.hoverScaleMultiply = function(scalar){
+	if (this.hoverFurniture == null){
+		return;
+	} else {
+		// this.hoverFurniture.scale.multiplyScalar(scalar);
+		this.hoverFurniture.scaleMultiply(scalar);
+	}
+}
+
+DesktopScene.prototype.setHoverScale = function(x,y,z){
+	if (this.hoverFurniture == null){
+		return;
+	} else {
+		this.hoverFurniture.setScale(x,y,z);
+	}
+}
+
+DesktopScene.prototype.setHoverDimensions = function(x,y,z){
+	if (this.hoverFurniture == null){
+		return;
+	} else {
+		this.hoverFurniture.setDimensions(x,y,z);
+	}
+}

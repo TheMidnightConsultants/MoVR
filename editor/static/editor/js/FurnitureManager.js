@@ -4,8 +4,10 @@ function FurnitureManager(furnitureList, scene, menuManager){
 	this.menuManager = menuManager;
 	
 	this.furnitureList = document.getElementById(furnitureList);
+	this.scaleButton = document.getElementById("changescaleBtn");
 		
-	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), true);
+	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), false);
+	this.scaleButton.addEventListener('click', FurnitureManager.prototype.onScaleClick.bind(this), true);
 };
 
 FurnitureManager.prototype.update = function(){
@@ -39,4 +41,24 @@ FurnitureManager.prototype.onFurnitureClick = function(event){
 	console.log("clicked " + furnitureId);
 	this.scene.addHoverFurniture(furnitureId);
 	this.menuManager.startApp();
+}
+
+FurnitureManager.prototype.onScaleClick = function(event){
+	if (this.scene.hoverFurniture == null){
+		return;
+	}
+	var fields = new Array(
+		{'tag':'X', 'type':'number'},
+		{'tag':'Y', 'type':'number'},
+		{'tag':'Z', 'type':'number'}
+	);
+	this.menuManager.getInput(fields, function(data){
+		console.log(data);
+		var xdim = data[0];
+		var ydim = data[1];
+		var zdim = data[2];
+		this.scene.setHoverDimensions(xdim,ydim,zdim);
+		this.menuManager.switchMenu("furnitureMenu");
+		this.menuManager.startApp();
+	}.bind(this));
 }

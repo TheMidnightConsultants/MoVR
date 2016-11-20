@@ -67,3 +67,27 @@ Furniture.prototype.rotateYaw = function(radians){
 Furniture.prototype.setScale = function(x, y, z){
 	this.mesh.scale.set(x,y,z);
 }
+
+Furniture.prototype.scaleMultiply = function(scalar){
+	this.mesh.scale.multiply(scalar);	
+}
+
+Furniture.prototype.getDimensions = function(){
+	// var scale = this.mesh.scale;
+	var boundingBox = new THREE.BoundingBoxHelper(this.mesh, 0xffffff);
+	boundingBox.update();
+	console.log(boundingBox);
+	var xdim = boundingBox.box.max.x - boundingBox.box.min.x;
+	var ydim = boundingBox.box.max.y - boundingBox.box.min.y;
+	var zdim = boundingBox.box.max.z - boundingBox.box.min.z;
+	return new THREE.Vector3(xdim,ydim,zdim);
+}
+
+Furniture.prototype.setDimensions = function(x,y,z){
+	var currentDimensions = this.getDimensions();
+	this.setScale(
+		x/currentDimensions.x,
+		y/currentDimensions.y,
+		z/currentDimensions.z
+	);
+}
