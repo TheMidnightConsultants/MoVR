@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
 	url(r'^rooms/?$', views.getRooms),
+	url(r'^loadroom/?$', views.loadRoom),
 	url(r'^addroom/?$', views.addRoom),
 	url(r'^deleteroom/?$', views.deleteRoom),
 	url(r'^listfurniture/?$', views.listFurniture),

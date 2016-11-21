@@ -28,7 +28,7 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
 				var width = data[1];
 				var length = data[2];
 				var height = data[3];
-				this.addRoom(name); //TODO:update args to include width/length/height
+				this.addRoom(name, [width, length, height]); //TODO:update args to include width/length/height
 				this.menuManager.switchMenu('mainMenu');
 			}.bind(this));
 		}.bind(this), false);
@@ -44,7 +44,7 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
 };
 
 RoomManager.prototype.update = function(){
-	Util.POST('/api/rooms/', {'user_id':this.userId, 'auth_token':this.authToken}, function(err, data){
+	Util.POST('/api/rooms/', {'auth_token':this.authToken}, function(err, data){
 		if (err != null){
 			console.log('Error ' + err + ' while getting rooms list.');
 		} else if (data.status === 'ok'){
@@ -65,8 +65,8 @@ RoomManager.prototype.update = function(){
 };
 
 //TODO:update args to accept length/width/height of room
-RoomManager.prototype.addRoom = function(roomName){
-	Util.POST('/api/addroom/', {'user_id':this.userId, 'auth_token':this.authToken, 'room_name':roomName}, function(err, data){
+RoomManager.prototype.addRoom = function(roomName, dims){
+	Util.POST('/api/addroom/', {'auth_token':this.authToken, 'room_name':roomName, dims}, function(err, data){
 		if (err != null){
 			console.log('Error ' + err + ' while POST-ing new room.');
 		} else if (data.status === 'ok'){
@@ -78,7 +78,7 @@ RoomManager.prototype.addRoom = function(roomName){
 }
 
 RoomManager.prototype.deleteRoom = function(roomId){
-	Util.POST('/api/deleteroom/', {'user_id':this.userId, 'auth_token':this.authToken, 'room_id':roomId}, function(err, data){
+	Util.POST('/api/deleteroom/', {'auth_token':this.authToken, 'room_id':roomId}, function(err, data){
 		if (err != null){
 			console.log('Error ' + err + ' while POST-ing room deletion.');
 		} else {
@@ -88,12 +88,17 @@ RoomManager.prototype.deleteRoom = function(roomId){
 }
 
 RoomManager.prototype.loadRoom = function(roomId){
-	//this function should actually fetch the saved room from the server, but that
-	//functionality doesn't exist yet
-	console.log(this.scene);
-	this.scene.clearRooms();
-	var room = new Room(roomId*12, roomId*12, roomId*12, 0x808080);
-	this.scene.addRoom(room);
+	// this function should actually fetch the saved room from the server, but that
+	// functionality doesn't exist yet
+	// Should use GET or POST
+	Util.POST('/api/loadroom/', {'auth_token':this.authToken, 'room_id':roomId}, function(err, data) {
+		console.log("ROOM DATA:")
+		console.log(data)
+		console.log(this.scene);
+		this.scene.clearRooms();
+		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, 0xFF0000);
+		this.scene.addRoom(room);
+	}.bind(this));
 }
 
 RoomManager.prototype.onRoomClick = function(event){
