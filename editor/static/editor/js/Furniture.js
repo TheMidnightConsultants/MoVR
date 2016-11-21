@@ -4,6 +4,7 @@ function Furniture(model_id, color_in){
 	}
 	
 	this.mesh = new THREE.Object3D();
+	this.model_id = model_id;
 	this.color = color_in;
 	
 	this.loadModel(model_id);
@@ -72,12 +73,6 @@ Furniture.prototype.cloneLoadedMesh = function(model_id){
 	console.log("New furniture mesh",this.mesh);
 }
 
-Furniture.prototype.setPosition = function(x, y, z){
-	this.mesh.position.x = x;
-	this.mesh.position.y = y;
-	this.mesh.position.z = z;
-}
-
 Furniture.prototype.setColor = function(color){
 	this.mesh.traverse( function(child) {
 		if (child instanceof THREE.Mesh){
@@ -94,22 +89,18 @@ Furniture.prototype.rotateYaw = function(radians){
 	this.mesh.rotateY(radians);
 }
 
-Furniture.prototype.setScale = function(x, y, z){
-	this.mesh.scale.set(x,y,z);
-}
-
 Furniture.prototype.scaleMultiply = function(scalar){
 	this.mesh.scale.multiply(scalar);	
 }
 
-Furniture.prototype.getDimensions = function(){
-	var boundingBox = new THREE.BoundingBoxHelper(this.mesh, 0xffffff);
-	boundingBox.update();
-	// console.log(boundingBox);
-	var xdim = boundingBox.box.max.x - boundingBox.box.min.x;
-	var ydim = boundingBox.box.max.y - boundingBox.box.min.y;
-	var zdim = boundingBox.box.max.z - boundingBox.box.min.z;
-	return new THREE.Vector3(xdim,ydim,zdim);
+Furniture.prototype.setScale = function(x, y, z){
+	this.mesh.scale.set(x,y,z);
+}
+
+Furniture.prototype.setPosition = function(x, y, z){
+	this.mesh.position.x = x;
+	this.mesh.position.y = y;
+	this.mesh.position.z = z;
 }
 
 Furniture.prototype.setDimensions = function(x,y,z){
@@ -122,3 +113,35 @@ Furniture.prototype.setDimensions = function(x,y,z){
 		z*currentScale.z/currentDimensions.z
 	);
 }
+
+
+Furniture.prototype.getDimensions = function(){
+	var boundingBox = new THREE.BoundingBoxHelper(this.mesh, 0xffffff);
+	boundingBox.update();
+	// console.log(boundingBox);
+	var xdim = boundingBox.box.max.x - boundingBox.box.min.x;
+	var ydim = boundingBox.box.max.y - boundingBox.box.min.y;
+	var zdim = boundingBox.box.max.z - boundingBox.box.min.z;
+	return new THREE.Vector3(xdim,ydim,zdim);
+}
+
+Furniture.prototype.getColor = function(){
+	return this.color;
+}
+
+Furniture.prototype.getPosition = function(){
+	return new THREE.Vector3().copy(this.mesh.position);
+}
+
+Furniture.prototype.getRotation = function(){
+	return this.mesh.rotation.y;
+}
+
+Furniture.prototype.getModelId = function(){
+	return this.model_id;
+}
+
+Furniture.prototype.getScale = function(){
+	return new THREE.Vector3().copy(this.mesh.scale);
+}
+
