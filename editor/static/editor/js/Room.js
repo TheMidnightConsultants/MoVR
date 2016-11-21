@@ -41,10 +41,12 @@ function Room( width_in, length_in, height_in, wallcolor_in, name_in ){
 	
 }
 
+// given a Furniture object, adds its furniture mesh to the room
 Room.prototype.addFurniture = function(furniture_obj){
 	this.furniture.add(furniture_obj.mesh); // add to furniture mesh
 }
 
+// removes furniture from the room
 Room.prototype.removeFurniture = function(furniture_obj){
 	this.furniture.remove(furniture_obj.mesh);
 }

@@ -14,6 +14,7 @@ function FurnitureManager(furnitureList, scene, menuManager){
 	this.saveroomButton.addEventListener('click', FurnitureManager.prototype.onSaveRoomClick.bind(this), true);
 };
 
+// updates the list of available furniture models
 FurnitureManager.prototype.update = function(){
 	console.log("getting furniture");
 	Util.GET('/api/listfurniture/', function(err, data){
@@ -36,6 +37,7 @@ FurnitureManager.prototype.update = function(){
 	}.bind(this));
 };
 
+// saves the state of the currently open room
 FurnitureManager.prototype.onSaveRoomClick = function(event) {
 	var roomData = {};
 	roomData.roomName = this.scene.room.room_name;
@@ -80,6 +82,7 @@ FurnitureManager.prototype.onSaveRoomClick = function(event) {
 	}.bind(this));
 };
 
+// adds furniture to the room when a furniture list item is clicked
 FurnitureManager.prototype.onFurnitureClick = function(event){
 	var furnitureId = event.target.id;
 	if (!furnitureId.startsWith('_f_')){
@@ -91,10 +94,12 @@ FurnitureManager.prototype.onFurnitureClick = function(event){
 	this.menuManager.startApp();
 }
 
+// opens the menu for adjusting furniture scale, and then adjusts it
 FurnitureManager.prototype.onScaleClick = function(event){
 	if (this.scene.hoverFurniture == null){
 		return;
 	}
+	// prompt for new dimensions
 	var fields = new Array(
 		{'tag':'X', 'type':'number'},
 		{'tag':'Y', 'type':'number'},
@@ -111,10 +116,12 @@ FurnitureManager.prototype.onScaleClick = function(event){
 	}.bind(this));
 }
 
+// opens the menu for changing the furniture base color
 FurnitureManager.prototype.onColorClick = function(event){
 	if (this.scene.hoverFurniture == null){
 		return;
 	}
+	// prompts the user for a color in hex
 	var fields = new Array(
 		{'tag':'Color', 'type':'text'}
 	);
