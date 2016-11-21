@@ -5,9 +5,11 @@ function FurnitureManager(furnitureList, scene, menuManager){
 	
 	this.furnitureList = document.getElementById(furnitureList);
 	this.scaleButton = document.getElementById("changescaleBtn");
+	this.colorButton = document.getElementById("changecolorBtn");
 		
 	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), false);
 	this.scaleButton.addEventListener('click', FurnitureManager.prototype.onScaleClick.bind(this), true);
+	this.colorButton.addEventListener('click', FurnitureManager.prototype.onColorClick.bind(this), true);
 };
 
 FurnitureManager.prototype.update = function(){
@@ -60,5 +62,24 @@ FurnitureManager.prototype.onScaleClick = function(event){
 		this.scene.setHoverDimensions(xdim,ydim,zdim);
 		this.menuManager.switchMenu("furnitureMenu");
 		this.menuManager.startApp();
+	}.bind(this));
+}
+
+FurnitureManager.prototype.onColorClick = function(event){
+	if (this.scene.hoverFurniture == null){
+		return;
+	}
+	var fields = new Array(
+		{'tag':'Color', 'type':'text'}
+	);
+	this.menuManager.getInput(fields, function(data){
+		var colorString = data[0];
+		if (colorString.match("^[0-9a-fA-f]{6}$") == null){
+			this.menuManager.switchMenu("furnitureMenu");
+			return;
+		}
+		var color = parseInt(colorString,16);
+		this.scene.hoverFurniture.setPermanentColor(color);
+		this.menuManager.switchMenu("furnitureMenu");
 	}.bind(this));
 }

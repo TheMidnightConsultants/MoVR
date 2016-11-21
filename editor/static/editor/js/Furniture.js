@@ -81,6 +81,10 @@ Furniture.prototype.setColor = function(color){
 	});
 }
 
+Furniture.prototype.setPermanentColor = function(color){
+	this.color = color;
+}
+
 Furniture.prototype.resetColor = function(){
 	this.setColor(this.color);
 }
