@@ -4,8 +4,11 @@
 function MenuManager( scene, inputManager ) {
 	console.log('instantiating a MenuManager');
 		
-	//hard-coded blocker ID
+	//hard-coded IDs
 	this.blocker = document.getElementById( 'blocker' );
+	this.crosshair = document.getElementById( 'crosshair' );	
+	
+	this.crosshair.style.display = 'none';
 	
 	this.inputManager = inputManager;
 	
@@ -26,12 +29,15 @@ function MenuManager( scene, inputManager ) {
 				scene.EnableControls();
 
 				blocker.style.display = 'none';
+				crosshair.style.display = 'block';
+				
 
 			} else {
 				
 				scene.DisableControls();
 
 				blocker.style.display = 'block';
+				crosshair.style.display = 'none';
 			}
 
 		};
