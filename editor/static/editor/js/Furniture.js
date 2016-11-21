@@ -41,7 +41,7 @@ Furniture.prototype.loadModel = function(model_id){
 			console.log(object);
 			object.traverse( function(child) {
 			 	if (child instanceof THREE.Mesh){
-			 		child.material = new THREE.MeshPhongMaterial( {color: this.color, wireframe: false, vertexColors: THREE.NoColors } );
+			 		child.material = new THREE.MeshPhongMaterial( {color: 0xffeedd, wireframe: false, vertexColors: THREE.NoColors } );
 			  	}
 			}.bind(this));
 			Furniture.loadedModels[model_id] = object;
@@ -63,6 +63,12 @@ Furniture.prototype.loadModel = function(model_id){
 Furniture.prototype.cloneLoadedMesh = function(model_id){
 	var cloneModel = Furniture.loadedModels[model_id].clone();
 	this.mesh.add(cloneModel);
+	this.mesh.traverse( function(child) {
+		if (child instanceof THREE.Mesh){
+			child.material = new THREE.MeshPhongMaterial( { wireframe: false, vertexColors: THREE.NoColors } );
+		}
+	}.bind(this));
+	this.resetColor();
 	console.log("New furniture mesh",this.mesh);
 }
 
@@ -70,6 +76,18 @@ Furniture.prototype.setPosition = function(x, y, z){
 	this.mesh.position.x = x;
 	this.mesh.position.y = y;
 	this.mesh.position.z = z;
+}
+
+Furniture.prototype.setColor = function(color){
+	this.mesh.traverse( function(child) {
+		if (child instanceof THREE.Mesh){
+			child.material.color.set(color);
+		}
+	});
+}
+
+Furniture.prototype.resetColor = function(){
+	this.setColor(this.color);
 }
 
 Furniture.prototype.rotateYaw = function(radians){

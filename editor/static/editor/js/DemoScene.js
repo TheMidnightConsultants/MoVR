@@ -213,6 +213,7 @@ DesktopScene.prototype.getFloorRaycast = function(rc){
 DesktopScene.prototype.placeFurniture = function(){
 	this.scene.remove(this.hoverFurniture.mesh);
 	this.room.addFurniture(this.hoverFurniture);
+	this.hoverFurniture.resetColor();
 	this.hoverFurniture = null;
 };
 
@@ -221,7 +222,10 @@ DesktopScene.prototype.pickFurniture = function(){
 	var intersect = rc.intersectObject(this.room.furniture, true);
 	if (intersect.length > 0){
 		var nearest = intersect[0].object.parent.parent;
-		return nearest.asFurniture;
+		var f = nearest.asFurniture;
+		console.log(f);
+		f.setColor(0xff3333);
+		return f;
 	}
 	return null;
 };
