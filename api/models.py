@@ -9,6 +9,7 @@ class Room(models.Model):
 	dimY = models.FloatField()
 	dimZ = models.FloatField()
 	wallColor = models.CharField(max_length=6)
+	furniture = models.TextField(default = '')
 	
 class Furniture(models.Model):
 	filename = models.CharField(max_length=100)

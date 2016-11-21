@@ -53,6 +53,9 @@ def addRoom(request):
 		)
 	room.save()
 	return JsonResponse({'status':'ok'})
+
+def saveRoom(request):
+	pass
 	
 def deleteRoom(request):
 	json_data = json.loads(request.body.decode('utf-8'))
