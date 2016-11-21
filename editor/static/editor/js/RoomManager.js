@@ -127,6 +127,51 @@ RoomManager.prototype.loadRoom = function(roomId){
 	}.bind(this));
 }
 
+RoomManager.prototype.duplicateRoom = function(roomId){
+	//load the room we want to duplicate, but don't instantiate it
+	Util.POST('/api/loadroom/', {'auth_token':this.authToken, 'room_id':roomId}, function(err, data) {
+		this.scene.clearRooms();
+		console.log(data);
+		data.furniture = data.furniture.split("u'").join("'")
+		data.furniture = data.furniture.split("'").join("\"")
+		if (data.furniture == ""){
+			data.furniture = "{}";
+		}
+		var roomData = data;
+		var dims = [data.dimensions.x, data.dimensions.y, data.dimensions.z];
+		this.menuManager.getInput([{'tag':'New Name', 'type':'text'}], function(inputData){
+			roomData.roomName = inputData[0];
+			this.menuManager.switchMenu('mainMenu');
+			this.duplicateRoomHelper(roomData);
+		}.bind(this));
+	}.bind(this));
+	this.duplicating = false;
+}
+
+RoomManager.prototype.duplicateRoomHelper = function(roomData){
+	//add the new room to the database
+	var dims = [roomData.dimensions.x, roomData.dimensions.y, roomData.dimensions.z];
+	Util.POST('/api/addroom/', {'auth_token':this.authToken, 'room_name':roomData.roomName, 'dims':dims, 'wallColor':roomData.wallColor}, function(err, data){
+		if (err != null){
+			console.log('Error ' + err + ' while POST-ing new room.');
+		} else if (data.status === 'ok'){
+			this.update();
+	//then update the new room's contents to match roomData
+			Util.POST('/api/saveroom/', roomData, function(err, data) {
+				if (err != null) {
+					console.log("Error " + err + " while saving room.");
+				} else if (data.status === 'ok') {
+					console.log('Successfully saved room');
+				} else {
+					console.log(data.status + ':' + data.msg);
+				}
+			}.bind(this));
+		} else {
+			console.log(data.status + ':' + data.msg);
+		}
+	}.bind(this));
+}
+
 RoomManager.prototype.onRoomClick = function(event){
 	var roomId = event.target.id;
 	if (!roomId.startsWith('_room_')){
@@ -139,6 +184,7 @@ RoomManager.prototype.onRoomClick = function(event){
 		this.deleteRoom(roomId);
 	} else if (this.duplicating){
 		//duplicate the room
+		this.duplicateRoom(roomId);
 	} else {
 		//load the room they clicked on and start the app
 		if (this.loadedRoom != roomId){
