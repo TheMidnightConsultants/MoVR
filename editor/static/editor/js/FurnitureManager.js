@@ -6,10 +6,12 @@ function FurnitureManager(furnitureList, scene, menuManager){
 	this.furnitureList = document.getElementById(furnitureList);
 	this.scaleButton = document.getElementById("changescaleBtn");
 	this.colorButton = document.getElementById("changecolorBtn");
+	this.saveroomButton = document.getElementById("saveroomBtn");
 		
 	this.furnitureList.addEventListener('click', FurnitureManager.prototype.onFurnitureClick.bind(this), false);
 	this.scaleButton.addEventListener('click', FurnitureManager.prototype.onScaleClick.bind(this), true);
 	this.colorButton.addEventListener('click', FurnitureManager.prototype.onColorClick.bind(this), true);
+	this.saveroomButton.addEventListener('click', FurnitureManager.prototype.onSaveRoomClick.bind(this), true);
 };
 
 FurnitureManager.prototype.update = function(){
@@ -31,6 +33,42 @@ FurnitureManager.prototype.update = function(){
 		} else {
 			console.log(data.status + ':' + data.msg);
 		}
+	}.bind(this));
+};
+
+FurnitureManager.prototype.onSaveRoomClick = function(event) {
+	var roomData = {};
+	roomData.roomName = this.scene.room.room_name;
+	// this.scene.room.furniture.children[0].asFurniture.getDimensions()
+	console.log(this.scene.room.room_name);
+	var furnitureList = this.scene.room.furniture.children;
+	//console.log(furnitureList);
+	roomData.furniture = [];
+	for (var i = furnitureList.length - 1; i >= 0; i--) {
+		var furniture = {};
+		furniture.dimensions = {
+			'x': furnitureList[i].asFurniture.getDimensions().x,
+			'y': furnitureList[i].asFurniture.getDimensions().y,
+			'z': furnitureList[i].asFurniture.getDimensions().z
+		};
+		furniture.color = furnitureList[i].asFurniture.getColor();
+		furniture.yaw = furnitureList[i].asFurniture.getRotation();
+		furniture.pos = {
+			'x': furnitureList[i].asFurniture.getPosition().x,
+			'y': furnitureList[i].asFurniture.getPosition().y,
+			'z': furnitureList[i].asFurniture.getPosition().z
+		};
+		furniture.modelId = furnitureList[i].asFurniture.getModelId();
+		furniture.scale = {
+			'x': furnitureList[i].asFurniture.getScale().x,
+			'y': furnitureList[i].asFurniture.getScale().y,
+			'z': furnitureList[i].asFurniture.getScale().z,
+		};
+		roomData.furniture.push(furniture);
+	}
+	console.log(roomData);
+	Util.POST('/api/saveroom/', roomData, function(err, data) {
+
 	}.bind(this));
 };
 

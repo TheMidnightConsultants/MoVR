@@ -69,7 +69,6 @@ RoomManager.prototype.update = function(){
 	}.bind(this));
 };
 
-//TODO:update args to accept length/width/height of room
 RoomManager.prototype.addRoom = function(roomName, dims, wallColor){
 	Util.POST('/api/addroom/', {'auth_token':this.authToken, 'room_name':roomName, 'dims':dims, 'wallColor':wallColor}, function(err, data){
 		if (err != null){
@@ -101,7 +100,7 @@ RoomManager.prototype.loadRoom = function(roomId){
 		console.log(data)
 		console.log(this.scene);
 		this.scene.clearRooms();
-		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16));
+		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16), data.name);
 		this.scene.addRoom(room);
 	}.bind(this));
 }

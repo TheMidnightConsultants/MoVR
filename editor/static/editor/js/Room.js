@@ -1,8 +1,9 @@
-function Room( width_in, length_in, height_in, wallcolor_in ){
+function Room( width_in, length_in, height_in, wallcolor_in, name_in ){
 	
 	this.dimensions = [width_in, length_in];
  	this.wall_color = wallcolor_in;
 	this.room_height = height_in;
+	this.room_name = name_in;
 
 	/*
 	 * 	    	    		Room.mesh

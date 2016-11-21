@@ -49,13 +49,19 @@ def addRoom(request):
 		dimX = json_data['dims'][0],
 		dimY = json_data['dims'][1],
 		dimZ = json_data['dims'][2],
-		wallColor = json_data['wallColor']
-		)
+		wallColor = json_data['wallColor'])
 	room.save()
 	return JsonResponse({'status':'ok'})
 
 def saveRoom(request):
-	pass
+	json_data = json.loads(request.body.decode('utf-8'))
+	print(json_data['furniture'])
+	updatedRoom = Room.objects.get(name = json_data['roomName'], owner = request.user)
+	print(updatedRoom)
+	print type(json_data['furniture'])
+	updatedRoom.furniture = json_data['furniture']
+	updatedRoom.save()
+	return JsonResponse({'status':'ok'})
 	
 def deleteRoom(request):
 	json_data = json.loads(request.body.decode('utf-8'))
