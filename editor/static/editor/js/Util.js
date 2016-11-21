@@ -1,38 +1,38 @@
 var Util = Util || {};
 
 Util.POST = function(url, args, callback) {
-    var req = new XMLHttpRequest();
-	var csrftoken = Util.getCookie('csrftoken');
-    req.open('post', url, true);
-    req.responseType = 'json'; 
-	req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-	req.setRequestHeader('X-CSRFToken', csrftoken);
-    req.onload = function() {
-      var status = req.status;
-      if (status == 200) {
-        callback(null, req.response);
-      } else {
-        callback(status);
-      }
-    };
-	var data = JSON.stringify(args);
-	console.log(data);
-    req.send(data);
+  var req = new XMLHttpRequest();
+  var csrftoken = Util.getCookie('csrftoken');
+  req.open('post', url, true);
+  req.responseType = 'json'; 
+  req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+  req.setRequestHeader('X-CSRFToken', csrftoken);
+  req.onload = function() {
+    var status = req.status;
+    if (status == 200) {
+      callback(null, req.response);
+    } else {
+      callback(status);
+    }
+  };
+  var data = JSON.stringify(args);
+  console.log(data);
+  req.send(data);
 };
 
 Util.GET = function(url, callback) {
-	var req = new XMLHttpRequest();
-	req.open('get', url, true);
-    req.responseType = 'json'; 
-	req.onload = function(){
-		var status = req.status;
-		if (status == 200){
-			callback(null, req.response);
-		} else {
-			callback(status);
-		}
-	};
-	req.send();
+  var req = new XMLHttpRequest();
+  req.open('get', url, true);
+  req.responseType = 'json'; 
+  req.onload = function(){
+    var status = req.status;
+    if (status == 200){
+      callback(null, req.response);
+    } else {
+      callback(status);
+    }
+  };
+  req.send();
 };
 
 Util.getCookie = function (name) {
@@ -52,7 +52,7 @@ Util.getCookie = function (name) {
 };
 
 Util.removeChildren = function(DOMobject){
-	while (DOMobject.firstChild) {
-		DOMobject.removeChild(DOMobject.firstChild);
-	}
+  while (DOMobject.firstChild) {
+    DOMobject.removeChild(DOMobject.firstChild);
+  }
 };
