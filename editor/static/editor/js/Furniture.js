@@ -45,6 +45,16 @@ Furniture.prototype.loadModel = function(model_id){
 			  	}
 			}.bind(this));
 			Furniture.loadedModels[model_id] = object;
+			
+			var boundingBox = new THREE.BoundingBoxHelper(object, 0xffffff);
+			boundingBox.update();
+			var center = boundingBox.box.center();
+			console.log(object.position);
+			object.position.x -= center.x;
+			object.position.y = -boundingBox.box.min.y;
+			object.position.z -= center.z;
+			console.log(object.position);
+			
 			this.cloneLoadedMesh(model_id);
 		}.bind(this), onProgress, onError );
 }
