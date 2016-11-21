@@ -68,7 +68,13 @@ FurnitureManager.prototype.onSaveRoomClick = function(event) {
 	}
 	console.log(roomData);
 	Util.POST('/api/saveroom/', roomData, function(err, data) {
-
+		if (err != null) {
+			console.log("Error " + err + " while saving room.");
+		} else if (data.status === 'ok') {
+			console.log('Successfully saved room');
+		} else {
+			console.log(data.status + ':' + data.msg);
+		}
 	}.bind(this));
 };
 
