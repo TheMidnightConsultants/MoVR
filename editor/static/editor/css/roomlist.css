@@ -35,6 +35,16 @@
 	height: 100%;
 }
 
+#crosshair {
+	position: absolute;
+	top: calc(50% - 7px);
+	left: calc(50% - 4px);
+	font-size:48px;
+	color:red;
+	/*transform: translate(-50%, -50%);
+	*/
+}
+
 .menu {
 	height: calc(100% - 23px);
 }

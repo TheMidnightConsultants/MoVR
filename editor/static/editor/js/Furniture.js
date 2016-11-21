@@ -56,6 +56,7 @@ Furniture.prototype.loadModel = function(model_id){
 			console.log(object.position);
 			
 			this.cloneLoadedMesh(model_id);
+			this.setDimensions(50,50,50);
 		}.bind(this), onProgress, onError );
 }
 
