@@ -19,7 +19,7 @@ def getRooms(request):
 	print(request.body)
 	json_data = json.loads(request.body.decode('utf-8'))
 	user_id = request.user
-	print User.objects
+	print(User.objects)
 	user = User.objects.filter(username = user_id)[0]
 	auth_token = json_data['auth_token']
 	if __authTokenValid(user_id, auth_token):
@@ -60,7 +60,7 @@ def saveRoom(request):
 	# 	return JsonResponse({'status':'failed', 'msg':'room does not exist'})
 	updatedRoom = Room.objects.get(name = json_data['roomName'], owner = request.user)
 	print(updatedRoom)
-	print type(json_data['furniture'])
+	print(type(json_data['furniture']))
 	updatedRoom.furniture = json_data['furniture']
 	updatedRoom.save()
 	return JsonResponse({'status':'ok'})

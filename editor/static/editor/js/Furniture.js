@@ -6,7 +6,8 @@ function Furniture(model_id, color_in){
 	this.mesh = new THREE.Object3D();
 	this.model_id = model_id;
 	this.color = color_in;
-	
+	this.loaded = false;
+	this.onLoad = null;
 	this.loadModel(model_id);
 
 	this.setPosition(0,0,0);
@@ -22,6 +23,8 @@ Furniture.prototype.loadModel = function(model_id){
 	if (model_id in Furniture.loadedModels){
 		console.log("Model already loaded for ", model_id);
 		this.cloneLoadedMesh(model_id);
+		this.setDimensions(50,50,50);
+		this.loaded = true;
 		return;
 	}
 
@@ -50,15 +53,19 @@ Furniture.prototype.loadModel = function(model_id){
 			var boundingBox = new THREE.BoundingBoxHelper(object, 0xffffff);
 			boundingBox.update();
 			var center = boundingBox.box.center();
-			console.log(object.position);
 			object.position.x -= center.x;
 			object.position.y = -boundingBox.box.min.y;
 			object.position.z -= center.z;
-			console.log(object.position);
 			
 			this.cloneLoadedMesh(model_id);
+			this.loaded = true;
 			this.setDimensions(50,50,50);
+			if (this.onLoad != null){
+				this.onLoad();
+			}
+			console.log("Loaded furniture model for ", model_id);
 		}.bind(this), onProgress, onError );
+	return false;
 }
 
 Furniture.prototype.cloneLoadedMesh = function(model_id){
@@ -118,6 +125,11 @@ Furniture.prototype.setDimensions = function(x,y,z){
 	);
 }
 
+Furniture.prototype.setRotation = function(x, y, z){
+	this.mesh.rotation.x = x;
+	this.mesh.rotation.y = y;
+	this.mesh.rotation.z = z;
+}
 
 Furniture.prototype.getDimensions = function(){
 	var boundingBox = new THREE.BoundingBoxHelper(this.mesh, 0xffffff);
@@ -138,7 +150,7 @@ Furniture.prototype.getPosition = function(){
 }
 
 Furniture.prototype.getRotation = function(){
-	return this.mesh.rotation.y;
+	return this.mesh.rotation;
 }
 
 Furniture.prototype.getModelId = function(){

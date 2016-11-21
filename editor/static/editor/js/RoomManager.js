@@ -96,8 +96,12 @@ RoomManager.prototype.loadRoom = function(roomId){
 		this.scene.clearRooms();
 		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16), data.name);
 		this.scene.addRoom(room);
+		console.log(data);
 		data.furniture = data.furniture.split("u'").join("'")
 		data.furniture = data.furniture.split("'").join("\"")
+		if (data.furniture == ""){
+			data.furniture = "{}";
+		}
 		var furniture = JSON.parse(data.furniture)
 		console.log("FURNITURE OBJECT:")
 		console.log(furniture)
@@ -105,12 +109,20 @@ RoomManager.prototype.loadRoom = function(roomId){
 			console.log("Element:")
 			console.log(furniture[i]);
 			var piece = new Furniture(furniture[i].modelId, furniture[i].color);
-			piece.setPermanentColor(furniture[i].color);
-			piece.rotateYaw(furniture[i].yaw);
-			piece.setScale(furniture[i].scale.x, furniture[i].scale.y, furniture[i].scale.z);
-			piece.setPosition(furniture[i].pos.x, furniture[i].pos.y, furniture[i].pos.z);
-			piece.setDimensions(furniture[i].dimensions.x, furniture[i].dimensions.y, furniture[i].dimensions.z);
-			this.scene.room.addFurniture(piece);
+			if (piece.loaded){
+				console.log("Piece already loaded");
+				piece.setPermanentColor(furniture[i].color);
+				piece.setRotation(furniture[i].rotation.x, furniture[i].rotation.y, furniture[i].rotation.z);
+				piece.setScale(furniture[i].scale.x, furniture[i].scale.y, furniture[i].scale.z);
+				piece.setPosition(furniture[i].pos.x, furniture[i].pos.y, furniture[i].pos.z);
+				piece.setDimensions(furniture[i].dimensions.x, furniture[i].dimensions.y, furniture[i].dimensions.z);
+				this.scene.room.addFurniture(piece);
+			} else {
+				var room = this.scene.room;
+				var properties = furniture[i];
+				console.log(properties);
+				piece.onLoad = this.createFurnitureCallback(properties, room);
+			}
 		}
 	}.bind(this));
 }
@@ -136,4 +148,18 @@ RoomManager.prototype.onRoomClick = function(event){
 		this.menuManager.startApp();
 	}
 	console.log("clicked " + roomId);
+}
+
+RoomManager.prototype.createFurnitureCallback = function(properties, room){
+	return function(){
+		console.log("called onLoad");
+		console.log(properties);
+		console.log(room);
+		this.setPermanentColor(properties.color);
+		this.setRotation(properties.rotation.x, properties.rotation.y, properties.rotation.z);
+		this.setScale(properties.scale.x, properties.scale.y, properties.scale.z);
+		this.setPosition(properties.pos.x, properties.pos.y, properties.pos.z);
+		this.setDimensions(properties.dimensions.x, properties.dimensions.y, properties.dimensions.z);
+		room.addFurniture(this);
+	};
 }

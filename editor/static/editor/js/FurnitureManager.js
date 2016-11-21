@@ -50,7 +50,11 @@ FurnitureManager.prototype.onSaveRoomClick = function(event) {
 			'z': furnitureList[i].asFurniture.getDimensions().z
 		};
 		furniture.color = furnitureList[i].asFurniture.getColor();
-		furniture.yaw = furnitureList[i].asFurniture.getRotation();
+		furniture.rotation = {
+			'x': furnitureList[i].asFurniture.getRotation().x,
+			'y': furnitureList[i].asFurniture.getRotation().y,
+			'z': furnitureList[i].asFurniture.getRotation().z
+		};
 		furniture.pos = {
 			'x': furnitureList[i].asFurniture.getPosition().x,
 			'y': furnitureList[i].asFurniture.getPosition().y,
