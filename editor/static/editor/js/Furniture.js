@@ -38,6 +38,7 @@ Furniture.prototype.loadModel = function(model_id){
 	
 	Furniture.loader.load('/api/loadmodel/'+model_id+'/',
 		function(object){
+			console.log(object);
 			object.traverse( function(child) {
 			 	if (child instanceof THREE.Mesh){
 			 		child.material = new THREE.MeshPhongMaterial( {color: this.color, wireframe: false, vertexColors: THREE.NoColors } );
@@ -73,10 +74,9 @@ Furniture.prototype.scaleMultiply = function(scalar){
 }
 
 Furniture.prototype.getDimensions = function(){
-	// var scale = this.mesh.scale;
 	var boundingBox = new THREE.BoundingBoxHelper(this.mesh, 0xffffff);
 	boundingBox.update();
-	console.log(boundingBox);
+	// console.log(boundingBox);
 	var xdim = boundingBox.box.max.x - boundingBox.box.min.x;
 	var ydim = boundingBox.box.max.y - boundingBox.box.min.y;
 	var zdim = boundingBox.box.max.z - boundingBox.box.min.z;
@@ -84,10 +84,12 @@ Furniture.prototype.getDimensions = function(){
 }
 
 Furniture.prototype.setDimensions = function(x,y,z){
+	var currentScale = new THREE.Vector3().copy(this.mesh.scale);
 	var currentDimensions = this.getDimensions();
+	// console.log(currentDimensions);
 	this.setScale(
-		x/currentDimensions.x,
-		y/currentDimensions.y,
-		z/currentDimensions.z
+		x*currentScale.x/currentDimensions.x,
+		y*currentScale.y/currentDimensions.y,
+		z*currentScale.z/currentDimensions.z
 	);
 }
