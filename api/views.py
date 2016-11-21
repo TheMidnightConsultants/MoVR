@@ -57,7 +57,7 @@ def saveRoom(request):
 	json_data = json.loads(request.body.decode('utf-8'))
 	print(json_data['furniture'])
 	if not Room.objects.get(name = json_data['roomName'], owner = request.user).exists():
-		return JsonResponse({'status':'failed', 'msg':'room doesn't exist})
+		return JsonResponse({'status':'failed', 'msg':'room does not exist'})
 	updatedRoom = Room.objects.get(name = json_data['roomName'], owner = request.user)
 	print(updatedRoom)
 	print type(json_data['furniture'])
@@ -103,5 +103,6 @@ def loadRoom(request):
 	json_response['name'] = room.name
 	json_response['dimensions'] = {'x':room.dimX, 'y':room.dimY, 'z':room.dimZ}
 	json_response['wallColor'] = room.wallColor
+	json_response['furniture'] = room.furniture
 	print(json_response)
 	return JsonResponse(json_response)
