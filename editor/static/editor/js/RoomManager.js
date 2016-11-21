@@ -92,16 +92,26 @@ RoomManager.prototype.deleteRoom = function(roomId){
 }
 
 RoomManager.prototype.loadRoom = function(roomId){
-	// this function should actually fetch the saved room from the server, but that
-	// functionality doesn't exist yet
-	// Should use GET or POST
 	Util.POST('/api/loadroom/', {'auth_token':this.authToken, 'room_id':roomId}, function(err, data) {
-		console.log("ROOM DATA:")
-		console.log(data)
-		console.log(this.scene);
 		this.scene.clearRooms();
 		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16), data.name);
 		this.scene.addRoom(room);
+		data.furniture = data.furniture.split("u'").join("'")
+		data.furniture = data.furniture.split("'").join("\"")
+		var furniture = JSON.parse(data.furniture)
+		console.log("FURNITURE OBJECT:")
+		console.log(furniture)
+		for (i = 0; i < furniture.length; i++) {
+			console.log("Element:")
+			console.log(furniture[i]);
+			var piece = new Furniture(furniture[i].modelId, furniture[i].color);
+			piece.setPermanentColor(furniture[i].color);
+			piece.rotateYaw(furniture[i].yaw);
+			piece.setScale(furniture[i].scale.x, furniture[i].scale.y, furniture[i].scale.z);
+			piece.setPosition(furniture[i].pos.x, furniture[i].pos.y, furniture[i].pos.z);
+			piece.setDimensions(furniture[i].dimensions.x, furniture[i].dimensions.y, furniture[i].dimensions.z);
+			this.scene.room.addFurniture(piece);
+		}
 	}.bind(this));
 }
 

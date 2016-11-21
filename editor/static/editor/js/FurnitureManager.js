@@ -39,10 +39,8 @@ FurnitureManager.prototype.update = function(){
 FurnitureManager.prototype.onSaveRoomClick = function(event) {
 	var roomData = {};
 	roomData.roomName = this.scene.room.room_name;
-	// this.scene.room.furniture.children[0].asFurniture.getDimensions()
 	console.log(this.scene.room.room_name);
 	var furnitureList = this.scene.room.furniture.children;
-	//console.log(furnitureList);
 	roomData.furniture = [];
 	for (var i = furnitureList.length - 1; i >= 0; i--) {
 		var furniture = {};
