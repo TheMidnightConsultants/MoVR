@@ -20,15 +20,20 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
 		this.roomList.addEventListener('click', RoomManager.prototype.onRoomClick.bind(this), true);
 		
 		this.addBtn.addEventListener('click', function(event){
-			var fields = new Array({'tag':'name', 'type':'text'}, {'tag':'width', 'type':'number'}, 
-				{'tag':'length', 'type':'number'}, {'tag':'height', 'type':'number'});
+			var fields = new Array(
+				{'tag':'name', 'type':'text'},
+				{'tag':'width', 'type':'number'}, 
+				{'tag':'length', 'type':'number'},
+				{'tag':'height', 'type':'number'},
+				{'tag':'wallColor', 'type':'text'});
 			this.menuManager.getInput(fields, function(data){
 				console.log(data);
 				var name = data[0];
 				var width = data[1];
 				var length = data[2];
 				var height = data[3];
-				this.addRoom(name, [width, length, height]); //TODO:update args to include width/length/height
+				var wallColor = data[4];
+				this.addRoom(name, [width, length, height], wallColor);
 				this.menuManager.switchMenu('mainMenu');
 			}.bind(this));
 		}.bind(this), false);
@@ -65,8 +70,8 @@ RoomManager.prototype.update = function(){
 };
 
 //TODO:update args to accept length/width/height of room
-RoomManager.prototype.addRoom = function(roomName, dims){
-	Util.POST('/api/addroom/', {'auth_token':this.authToken, 'room_name':roomName, dims}, function(err, data){
+RoomManager.prototype.addRoom = function(roomName, dims, wallColor){
+	Util.POST('/api/addroom/', {'auth_token':this.authToken, 'room_name':roomName, 'dims':dims, 'wallColor':wallColor}, function(err, data){
 		if (err != null){
 			console.log('Error ' + err + ' while POST-ing new room.');
 		} else if (data.status === 'ok'){
@@ -96,7 +101,7 @@ RoomManager.prototype.loadRoom = function(roomId){
 		console.log(data)
 		console.log(this.scene);
 		this.scene.clearRooms();
-		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, 0xFF0000);
+		var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16));
 		this.scene.addRoom(room);
 	}.bind(this));
 }

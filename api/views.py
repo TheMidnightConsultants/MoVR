@@ -15,7 +15,7 @@ def index(request):
 	return HttpResponse("Welcome to the API")
 	
 def getRooms(request):
-	print "REQUEST BODY:"
+	print("REQUEST BODY:")
 	print(request.body)
 	json_data = json.loads(request.body.decode('utf-8'))
 	user_id = request.user
@@ -31,7 +31,7 @@ def getRooms(request):
 	return JsonResponse({'status':'failed', 'msg':'invalid token'})
 	
 def addRoom(request):
-	print request.user
+	print(request.user)
 	json_data = json.loads(request.body.decode('utf-8'))
 	user_id = request.user
 	user = User.objects.filter(username = user_id)[0]
@@ -43,7 +43,14 @@ def addRoom(request):
 		room_name = room_name[:100]
 	if Room.objects.filter(owner=user_id, name=room_name).exists():
 		return JsonResponse({'status':'failed', 'msg':'room exists'})
-	room = Room(owner = user, name = room_name, dimX = json_data['dims'][0], dimY = json_data['dims'][1], dimZ = json_data['dims'][2])
+	room = Room(
+		owner = user,
+		name = room_name,
+		dimX = json_data['dims'][0],
+		dimY = json_data['dims'][1],
+		dimZ = json_data['dims'][2],
+		wallColor = json_data['wallColor']
+		)
 	room.save()
 	return JsonResponse({'status':'ok'})
 	
@@ -84,5 +91,6 @@ def loadRoom(request):
 	json_response = {}
 	json_response['name'] = room.name
 	json_response['dimensions'] = {'x':room.dimX, 'y':room.dimY, 'z':room.dimZ}
-	print json_response
+	json_response['wallColor'] = room.wallColor
+	print(json_response)
 	return JsonResponse(json_response)

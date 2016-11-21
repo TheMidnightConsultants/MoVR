@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 class Room(models.Model):
 	owner = models.ForeignKey(User)
 	name = models.CharField(max_length=100)
-	dimX = models.PositiveIntegerField()
-	dimY = models.PositiveIntegerField()
-	dimZ = models.PositiveIntegerField()
+	dimX = models.FloatField()
+	dimY = models.FloatField()
+	dimZ = models.FloatField()
+	wallColor = models.CharField(max_length=6)
 	
 class Furniture(models.Model):
 	filename = models.CharField(max_length=100)
