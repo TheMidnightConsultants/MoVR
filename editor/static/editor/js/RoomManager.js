@@ -6,16 +6,17 @@ function RoomManager(roomList, addBtn, dupBtn, delBtn, userId, authToken, scene,
   this.menuManager = menuManager;
   this.loadedRoom = -1;
   
+  this.userId = userId;
+  this.authToken = authToken;
+  
   this.deleting = false;
   this.duplicating = false;
   
-  if (typeof addBtn !== 'undefined' && typeof dupBtn !== 'undefined' && typeof delBtn !== 'undefined' && typeof userId !== 'undefined' && typeof authToken !== 'undefined'){
+  if (typeof addBtn !== 'undefined' && typeof dupBtn !== 'undefined' && typeof delBtn !== 'undefined'){
     console.log('initializing complicated RoomManager');
     this.addBtn = document.getElementById(addBtn);
     this.dupBtn = document.getElementById(dupBtn);
     this.delBtn = document.getElementById(delBtn);
-    this.userId = userId;
-    this.authToken = authToken;
     
     this.roomList.addEventListener('click', RoomManager.prototype.onRoomClick.bind(this), true);
     
