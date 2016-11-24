@@ -15,11 +15,11 @@ def index(request):
 	return HttpResponse("Welcome to the API")
 	
 def getRooms(request):
-	print "REQUEST BODY:"
+	print("REQUEST BODY:")
 	print(request.body)
 	json_data = json.loads(request.body.decode('utf-8'))
 	user_id = request.user
-	print User.objects
+	print(User.objects)
 	user = User.objects.filter(username = user_id)[0]
 	auth_token = json_data['auth_token']
 	if __authTokenValid(user_id, auth_token):
@@ -31,7 +31,7 @@ def getRooms(request):
 	return JsonResponse({'status':'failed', 'msg':'invalid token'})
 	
 def addRoom(request):
-	print request.user
+	print(request.user)
 	json_data = json.loads(request.body.decode('utf-8'))
 	user_id = request.user
 	user = User.objects.filter(username = user_id)[0]
@@ -84,5 +84,5 @@ def loadRoom(request):
 	json_response = {}
 	json_response['name'] = room.name
 	json_response['dimensions'] = {'x':room.dimX, 'y':room.dimY, 'z':room.dimZ}
-	print json_response
+	print(json_response)
 	return JsonResponse(json_response)
