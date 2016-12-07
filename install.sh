@@ -35,11 +35,11 @@ fi
 if hash django-admin 2>/dev/null; then
 	echo -e "\e[92mDjango is installed!\e[39m"
 else
-	echo -e "\e91mDjango isn't installed.  Installing Django...\e[39m"
+	echo -e "\e[91mDjango isn't installed.  Installing Django...\e[39m"
 	pip install django
 	echo -e "\e[92mFinished installing Django.\e[39m"
 fi
 
 echo -e "\e[92mRunning Django database migrations...\e[39m"
 python manage.py migrate
-echo -e "\e[92mDone.  Run 'python manage.py runserver' to start server.\e[39m"
+echo -e "\e[92mDone.  Run 'python manage.py runserver 0.0.0.0:8000' to start server on port 8000.  Be warned, though, you'll have to add this server's IP to ALLOWED_HOSTS in settings.py.  Have fun, be safe, build responsible rooms!\e[39m"
