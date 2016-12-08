@@ -45,6 +45,10 @@
 	*/
 }
 
+#debugButtons {
+    display: none;
+}
+
 .menu {
 	height: calc(100% - 23px);
 }
