@@ -8,7 +8,9 @@ function MenuManager( scene, inputManager ) {
   this.blocker = document.getElementById( 'blocker' );
   this.crosshair = document.getElementById( 'crosshair' );  
   
-  this.crosshair.style.display = 'none';
+  if (this.crosshair){
+	this.crosshair.style.display = 'none';
+  }
   
   this.inputManager = inputManager;
   

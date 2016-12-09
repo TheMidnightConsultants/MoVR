@@ -1,30 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>MoVR Mobile</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="user-scalable=no, initial-scale=1">
-	</head>
-	<body>
-		<script src="/static/editor/js/three.js"></script>
-		<script src="/static/editor/js/DeviceOrientationControls.js"></script>
-		<script src="/static/editor/js/Scene.js"></script>
-		<script src="/static/editor/js/MobileScene.js"></script>
-	    <script src="/static/editor/js/OBJLoader.js"></script>
-	    <script src="/static/editor/js/Room.js"></script>
-	    <script src="/static/editor/js/Furniture.js"></script>
-		<script>
-			var scene = new MobileScene();	
-			var canvas = scene.renderer.domElement;
-			if ('webkitCancelFullScreen' in document){
-				canvas.addEventListener('click', function( event ){
-					if (document.webkitIsFullScreen){
-						document.webkitCancelFullScreen();
-					} else {
-						canvas.webkitRequestFullScreen();
-					}
-				}, false);
+<head>
+	<title>MoVR Mobile</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/editor/css/semantic/button.css">
+    <link rel="stylesheet" type="text/css" href="/static/editor/css/semantic/segment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/editor/css/mobileroomlist.css">
+</head>
+<body>
+	<script src="/static/editor/js/three.js"></script>
+	<script src="/static/editor/js/DeviceOrientationControls.js"></script>
+	<script src="/static/editor/js/Scene.js"></script>
+	<script src="/static/editor/js/MobileScene.js"></script>
+	<script src="/static/editor/js/OBJLoader.js"></script>
+	<script src="/static/editor/js/Room.js"></script>
+	<script src="/static/editor/js/Furniture.js"></script>
+	<script src="/static/editor/js/Util.js"></script>
+
+	<div id="blocker">
+
+		<div id="mainMenu" class="menu">
+			
+			<div class="header">
+				{% if not user.username %}
+				You are not logged in.
+				{% else %}
+				{{ user.username }}'s rooms
+				{% endif %}
+			</div>
+		
+			<div id="roomslist" class="list container">
+				<div class="ui segment">
+					<ul id="roomslistUL">
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<script>
+		var userId = {{ user.pk }};
+		var scene = new MobileScene();	
+		var canvas = scene.renderer.domElement;
+		var blocker = document.getElementById('blocker');
+		var roomList = document.getElementById('roomslistUL');
+		if ('webkitCancelFullScreen' in document){
+		  canvas.addEventListener('click', function( event ){
+			if (document.webkitIsFullScreen){
+			  document.webkitCancelFullScreen();
 			}
-		</script>
-	</body>
+			if (blocker.style.display == 'none'){
+			  blocker.style.display = 'block';
+			}
+		  }, false);
+		}
+		
+		var update = function(){
+		  Util.POST('/api/rooms/', {'auth_token':'authorized'}, function(err, data){
+			if (err != null){
+			  console.log('Error ' + err + ' while getting rooms list.');
+			} else if (data.status === 'ok'){
+			  while (roomList.lastChild){
+				roomList.removeChild(roomList.lastChild);
+			  }
+			  var roomNames = data.data;
+			  for (var key in roomNames){
+				var li = document.createElement('li');
+				li.appendChild(document.createTextNode(roomNames[key]));
+				li.id = '_room_' + key;
+				roomList.appendChild(li);
+			  }
+			} else {
+			  console.log(data.status + ':' + data.msg);
+			}
+		  }.bind(this));
+		};
+		
+		var loadRoom = function(scene, roomId){
+		  Util.POST('/api/loadroom/', {'auth_token':'authorized', 'room_id':roomId}, function(err, data) {
+			scene.clearRooms();
+			var room = new Room(data.dimensions.x, data.dimensions.y, data.dimensions.z, parseInt(data.wallColor, 16), data.name);
+			scene.addRoom(room);
+			console.log(data);
+			data.furniture = data.furniture.split("u'").join("'")
+			data.furniture = data.furniture.split("'").join("\"")
+			if (data.furniture == ""){
+			  data.furniture = "{}";
+			}
+			var furniture = JSON.parse(data.furniture)
+			console.log("FURNITURE OBJECT:")
+			console.log(furniture)
+			for (i = 0; i < furniture.length; i++) {
+			  console.log("Element:")
+			  console.log(furniture[i]);
+			  var piece = new Furniture(furniture[i].modelId, furniture[i].color);
+			  if (piece.loaded){
+				console.log("Piece already loaded");
+				piece.setPermanentColor(furniture[i].color);
+				piece.setRotation(furniture[i].rotation.x, furniture[i].rotation.y, furniture[i].rotation.z);
+				piece.setScale(furniture[i].scale.x, furniture[i].scale.y, furniture[i].scale.z);
+				piece.setPosition(furniture[i].pos.x, furniture[i].pos.y, furniture[i].pos.z);
+				piece.setDimensions(furniture[i].dimensions.x, furniture[i].dimensions.y, furniture[i].dimensions.z);
+				scene.room.addFurniture(piece);
+			  } else {
+				var room = scene.room;
+				var properties = furniture[i];
+				console.log(properties);
+				piece.onLoad = createFurnitureCallback(properties, room);
+			  }
+			}
+		  }.bind(this));
+		}
+		
+		var createFurnitureCallback = function(properties, room){
+		  return function(){
+			console.log("called onLoad");
+			console.log(properties);
+			console.log(room);
+			this.setPermanentColor(properties.color);
+			this.setRotation(properties.rotation.x, properties.rotation.y, properties.rotation.z);
+			this.setScale(properties.scale.x, properties.scale.y, properties.scale.z);
+			this.setPosition(properties.pos.x, properties.pos.y, properties.pos.z);
+			this.setDimensions(properties.dimensions.x, properties.dimensions.y, properties.dimensions.z);
+			room.addFurniture(this);
+		  };
+		}
+		
+		var onRoomClick = function(event){
+		  var roomId = event.target.id;
+		  if (!roomId.startsWith('_room_')){
+			return;
+		  } else {
+			roomId = roomId.substring(6);
+		  }
+		  //load the room they clicked on and start the app
+		  if (loadedRoom != roomId){
+			loadRoom(scene, roomId);
+		  }
+		  canvas.webkitRequestFullScreen();
+		  blocker.style.display = 'none';		  
+		}
+
+		var loadedRoom = null;
+		roomList.addEventListener('click', onRoomClick);
+		update();
+	</script>
+</body>
 </html>
